@@ -73,14 +73,15 @@ copyright_date:
   help: The copyright year
   default: "{{ '%Y' | strftime }}"
 
-project_type:
-  type: str
-  help: Project type determines structure and tooling
-  choices:
-    cli: CLI application with goreleaser
-    library: Reusable Go library
-    workspace: Go workspace (monorepo)
-  default: cli
+# TODO: Invalid choice?
+# project_type:
+#   type: str
+#   help: Project type determines structure and tooling
+#   choices:
+#     cli: CLI application with goreleaser
+#     library: Reusable Go library
+#     workspace: Go workspace (monorepo)
+#   default: cli
 
 use_goreleaser:
   type: bool

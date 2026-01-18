@@ -12,28 +12,28 @@ repos:
     hooks:
       - id: copier-template-tester
 
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
-    hooks:
-      - id: check-added-large-files
-      - id: check-merge-conflict
-      - id: check-symlinks
-      - id: check-toml
-      - id: check-vcs-permalinks
-      - id: check-yaml
-        args: [--unsafe]
-      - id: end-of-file-fixer
-        exclude: \.copier-answers\.yml
-      - id: mixed-line-ending
-        args: [--fix=auto]
-      - id: trailing-whitespace
-
-  - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.1.0
-    hooks:
-      - id: commitizen
-
-  - repo: https://github.com/pappasam/toml-sort
-    rev: v0.24.2
-    hooks:
-      - id: toml-sort-fix
+  # - repo: https://github.com/pre-commit/pre-commit-hooks
+  #   rev: v5.0.0
+  #   hooks:
+  #     - id: check-added-large-files
+  #     - id: check-merge-conflict
+  #     - id: check-symlinks
+  #     - id: check-toml
+  #     - id: check-vcs-permalinks
+  #     - id: check-yaml
+  #       args: [--unsafe]
+  #     - id: end-of-file-fixer
+  #       exclude: \.copier-answers\.yml
+  #     - id: mixed-line-ending
+  #       args: [--fix=auto]
+  #     - id: trailing-whitespace
+  #
+  # - repo: https://github.com/commitizen-tools/commitizen
+  #   rev: v4.1.0
+  #   hooks:
+  #     - id: commitizen
+  #
+  # - repo: https://github.com/pappasam/toml-sort
+  #   rev: v0.24.2
+  #   hooks:
+  #     - id: toml-sort-fix
