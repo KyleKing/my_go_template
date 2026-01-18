@@ -1,0 +1,99 @@
+---
+_min_copier_version: 9.0.0
+
+# ====== TEMPLATE ======
+_answers_file: .copier-answers.yml
+_subdirectory: go_template
+_skip_if_exists:
+  - CONTRIBUTING.md
+  - README.md
+_tasks:
+  - git init
+  - python _copier_post_generation.py
+
+_message_after_copy: |
+  The '{{ project_name }}' Go project has been initialized!
+
+  1. Review the changes and commit
+  2. Install mise tools: `mise install`
+  3. Install git hooks: `hk install --mise`
+  4. Run `mise run ci` to verify setup
+  5. If this is a new project, create the GitHub repo:
+
+      ```sh
+      gh repo create "{{ project_name }}" --source=. --remote=origin --push
+      ```
+
+# ====== QUESTIONS ======
+development_branch:
+  type: str
+  help: The GitHub branch name used for development
+  default: main
+
+project_name:
+  type: str
+  help: Your project name (lowercase, hyphens allowed)
+
+project_description:
+  type: str
+  help: Your project description
+
+author_name:
+  type: str
+  help: Your full name
+  default: Kyle King
+
+author_email:
+  type: str
+  help: Your account email
+  default: dev.act.kyle@gmail.com
+
+repository_provider:
+  type: str
+  help: Your repository provider
+  default: https://github.com
+
+author_username:
+  type: str
+  help: Your username for {{ repository_provider }}
+  default: kyleking
+
+repository_namespace:
+  type: str
+  help: Your repository namespace
+  default: "{{ author_username }}"
+
+module_path:
+  type: str
+  help: Go module path (e.g., github.com/user/project)
+  default: "github.com/{{ repository_namespace }}/{{ project_name }}"
+
+copyright_date:
+  type: str
+  help: The copyright year
+  default: "{{ '%Y' | strftime }}"
+
+project_type:
+  type: str
+  help: Project type determines structure and tooling
+  choices:
+    cli: CLI application with goreleaser
+    library: Reusable Go library
+    workspace: Go workspace (monorepo)
+  default: cli
+
+use_goreleaser:
+  type: bool
+  help: Include goreleaser configuration for releases
+  default: true
+  when: "{{ project_type == 'cli' }}"
+
+hk_version:
+  type: str
+  help: hk pre-commit hooks version
+  default: "0.8.2"
+
+golangci_lint_version:
+  type: str
+  help: golangci-lint version for CI
+  default: "v2.8.0"

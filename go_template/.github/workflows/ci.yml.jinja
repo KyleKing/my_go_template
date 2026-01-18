@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    tags: ["*"]
+    branches: ["{{ development_branch }}"]
+{% raw %}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jdx/mise-action@v2
+        with:
+          mise_toml: |
+            [env]
+            MISE_ENV = "ci"
+
+      - uses: actions/setup-go@v5
+        with:
+{% endraw %}
+{% if project_type == 'workspace' %}
+          go-version-file: 'go.work'
+          cache-dependency-path: 'go.work.sum'
+{% else %}
+          go-version-file: 'go.mod'
+{% endif %}
+
+      - run: mise run ci
+
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:{% raw %}
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+{% endraw %}
+{% if project_type == 'workspace' %}
+          go-version-file: 'go.work'
+{% else %}
+          go-version-file: 'go.mod'
+{% endif %}
+
+      - uses: golangci/golangci-lint-action@v6
+        with:
+          version: {{ golangci_lint_version }}
