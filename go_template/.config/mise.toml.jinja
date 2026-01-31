@@ -3,6 +3,16 @@ MISE_ENV = "hk"
 
 [settings]
 experimental = true
+{% if use_goreleaser %}
+[tasks."brew:sha"]
+description = "Print SHA256 for Homebrew formula (run after release)"
+run = """
+echo "Download binaries from the latest release and run:"
+echo "  shasum -a 256 {{ project_name }}-darwin-arm64 {{ project_name }}-darwin-amd64 {{ project_name }}-linux-arm64 {{ project_name }}-linux-amd64"
+echo ""
+echo "Then update Formula/{{ project_name }}.rb with the SHA256 values and version."
+"""
+{%- endif %}
 
 [tasks.build]
 description = "Build binary"
@@ -35,14 +45,3 @@ run = "go test -coverprofile=coverage.out ./..."
 [tasks."test:view-coverage"]
 description = "View coverage report in browser"
 run = "go tool cover -html=coverage.out"
-{% if use_goreleaser %}
-
-[tasks."brew:sha"]
-description = "Print SHA256 for Homebrew formula (run after release)"
-run = """
-echo "Download binaries from the latest release and run:"
-echo "  shasum -a 256 {{ project_name }}-darwin-arm64 {{ project_name }}-darwin-amd64 {{ project_name }}-linux-arm64 {{ project_name }}-linux-amd64"
-echo ""
-echo "Then update Formula/{{ project_name }}.rb with the SHA256 values and version."
-"""
-{% endif %}

@@ -1,4 +1,4 @@
-{% if use_goreleaser %}
+{% if use_goreleaser -%}
 # typed: false
 # frozen_string_literal: true
 
@@ -42,4 +42,4 @@ class {{ project_name | replace("-", " ") | title | replace(" ", "") }} < Formul
     assert_match version.to_s, shell_output("#{bin}/{{ project_name }} --version")
   end
 end
-{% endif %}
+{%- endif %}
