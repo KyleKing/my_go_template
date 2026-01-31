@@ -87,13 +87,3 @@ use_goreleaser:
   type: bool
   help: Include goreleaser configuration for releases
   default: true
-
-hk_version:
-  type: str
-  help: hk pre-commit hooks version
-  default: "0.8.2"
-
-golangci_lint_version:
-  type: str
-  help: golangci-lint version for CI
-  default: "v2.8.0"
