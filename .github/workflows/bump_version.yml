@@ -10,7 +10,7 @@ jobs:
   bump-version:
     # Ignore the commits from this action
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     name: Bump version and make release with commitizen
     # Fix 403 error (https://github.com/softprops/action-gh-release/issues/400)
     permissions:
@@ -31,4 +31,4 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           body_path: body.md
-          tag_name: ${{ env.REVISION }}
+          tag_name: v${{ env.REVISION }}
