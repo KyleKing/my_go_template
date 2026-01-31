@@ -18,7 +18,7 @@ brew install {{ repository_namespace }}/tap/{{ project_name }}
 {% endif %}
 
 ```bash
-go install {{ module_path }}@latest
+go install {{ module_path }}/cmd/{{ project_name }}@latest
 ```
 {% elif project_type == 'library' %}
 

@@ -3,7 +3,8 @@ MISE_ENV = "hk"
 
 [settings]
 experimental = true
-{% if use_goreleaser %}
+
+{% if use_goreleaser -%}
 [tasks."brew:sha"]
 description = "Print SHA256 for Homebrew formula (run after release)"
 run = """
@@ -14,13 +15,23 @@ echo "Then update Formula/{{ project_name }}.rb with the SHA256 values and versi
 """
 {%- endif %}
 
+{% if project_type == 'cli' -%}
 [tasks.build]
 description = "Build binary"
+run = "go build -v -o {{ project_name }} ./cmd/{{ project_name }}"
+
+[tasks.ci]
+description = "Run all checks (used in GitHub Actions)"
+run = ["go test -v ./...", "go build -v -o {{ project_name }} ./cmd/{{ project_name }}"]
+{%- else %}
+[tasks.build]
+description = "Build packages"
 run = "go build -v ./..."
 
 [tasks.ci]
 description = "Run all checks (used in GitHub Actions)"
 run = ["go test -v ./...", "go build -v ./..."]
+{%- endif %}
 
 [tasks.clean]
 description = "Clean build artifacts"

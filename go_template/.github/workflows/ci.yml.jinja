@@ -27,12 +27,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
 {% endraw %}
-{% if project_type == 'workspace' %}
-          go-version-file: 'go.work'
-          cache-dependency-path: 'go.work.sum'
-{% else %}
           go-version-file: 'go.mod'
-{% endif %}
 
       - run: mise run ci
 
@@ -45,11 +40,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
 {% endraw %}
-{% if project_type == 'workspace' %}
-          go-version-file: 'go.work'
-{% else %}
           go-version-file: 'go.mod'
-{% endif %}
 
       - uses: golangci/golangci-lint-action@v6
         with:

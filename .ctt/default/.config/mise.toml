@@ -15,11 +15,11 @@ echo "Then update Formula/test-template.rb with the SHA256 values and version."
 
 [tasks.build]
 description = "Build binary"
-run = "go build -v ./..."
+run = "go build -v -o test-template ./cmd/test-template"
 
 [tasks.ci]
 description = "Run all checks (used in GitHub Actions)"
-run = ["go test -v ./...", "go build -v ./..."]
+run = ["go test -v ./...", "go build -v -o test-template ./cmd/test-template"]
 
 [tasks.clean]
 description = "Clean build artifacts"

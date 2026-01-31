@@ -9,6 +9,8 @@ This document provides guidelines for AI coding assistants working on this Go pr
 ```
 test-template/
 
+├── cmd/test-template/  # CLI entry point
+
 ├── internal/         # Private packages (not importable by other modules)
 │   ├── app/          # Application logic
 │   └── ...

@@ -9,7 +9,7 @@ This document provides guidelines for AI coding assistants working on this Go pr
 ```
 {{ project_name }}/
 {% if project_type == 'cli' %}
-├── main.go           # Entry point (minimal, delegates to internal/)
+├── cmd/{{ project_name }}/  # CLI entry point
 {% endif %}
 ├── internal/         # Private packages (not importable by other modules)
 │   ├── app/          # Application logic

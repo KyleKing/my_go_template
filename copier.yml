@@ -4,9 +4,6 @@ _min_copier_version: 9.0.0
 # ====== TEMPLATE ======
 _answers_file: .copier-answers.yml
 _subdirectory: go_template
-_skip_if_exists:
-  - CONTRIBUTING.md
-  - README.md
 _tasks:
   - git init
   - python _copier_post_generation.py
@@ -73,15 +70,13 @@ copyright_date:
   help: The copyright year
   default: "{{ '%Y' | strftime }}"
 
-# TODO: Invalid choice?
-# project_type:
-#   type: str
-#   help: Project type determines structure and tooling
-#   choices:
-#     cli: CLI application with goreleaser
-#     library: Reusable Go library
-#     workspace: Go workspace (monorepo)
-#   default: cli
+project_type:
+  type: str
+  help: Project type determines structure and tooling (cli=CLI/TUI application with goreleaser, library=Reusable Go library)
+  choices:
+    - cli
+    - library
+  default: cli
 
 use_goreleaser:
   type: bool
