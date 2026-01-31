@@ -1,3 +1,9 @@
+## v0.2.1 (2026-01-31)
+
+### Fix
+
+- adapt to gh-lazydispatch
+
 ## v0.2.0 (2026-01-31)
 
 ### Feat
