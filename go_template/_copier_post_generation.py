@@ -2,13 +2,11 @@
 """Post-generation tasks for go_template."""
 
 from pathlib import Path
-import subprocess
-import sys
 
 
 def cleanup_conditional_files():
     """Remove files that were conditionally excluded."""
-    root = Path(".")
+    root = Path(__file__).parent
 
     # Remove goreleaser if not a CLI project or use_goreleaser is false
     goreleaser = root / ".goreleaser.yml"

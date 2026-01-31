@@ -9,7 +9,12 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
-    goos:
+    ldflags:{% raw %}
+      - -s -w
+      - -X main.version={{.Version}}
+      - -X main.commit={{.Commit}}
+      - -X main.date={{.Date}}
+    goos:{% endraw %}
       - linux
       - darwin
       - windows
@@ -48,4 +53,4 @@ changelog:
 release:
   draft: false
   prerelease: auto
-{% endif %}
+{%- endif %}
