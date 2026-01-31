@@ -14,12 +14,15 @@ mise run ci
 
 | Command | Description |
 |---------|-------------|
-| `mise run ci` | Full CI check (tests + build) |
-| `mise run test` | Run tests with coverage |
-| `mise run lint` | Run linter |
-| `mise run format` | Auto-fix lint and formatting |
+| `mise run bench` | Run benchmarks |
 | `mise run build` | Build binary |
+| `mise run ci` | Full CI check (tests + build) |
+| `mise run clean` | Clean build artifacts |
+| `mise run demo` | Generate VHS demo recordings |
+| `mise run format` | Auto-fix lint and formatting |
 | `mise run hooks` | Run git hooks |
+| `mise run lint` | Run linter |
+| `mise run test` | Run tests with coverage |
 | `mise tasks` | List all available tasks |
 
 ## Code Guidelines

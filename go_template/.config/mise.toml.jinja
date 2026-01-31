@@ -1,8 +1,15 @@
+# Project-specific tasks belong in separate mise.*.toml files (e.g., mise.project.toml)
+# This file contains shared tasks managed by the copier template
+
 [env]
 MISE_ENV = "hk"
 
 [settings]
 experimental = true
+
+[tasks.bench]
+description = "Run benchmarks"
+run = "go test -bench=. -benchmem -run=^$ ./..."
 
 {% if use_goreleaser -%}
 [tasks."brew:sha"]
@@ -22,7 +29,7 @@ run = "go build -v -o {{ project_name }} ./cmd/{{ project_name }}"
 
 [tasks.ci]
 description = "Run all checks (used in GitHub Actions)"
-run = ["go test -v ./...", "go build -v -o {{ project_name }} ./cmd/{{ project_name }}"]
+run = ["go test -v -coverprofile=coverage.out ./...", "go build -v -o {{ project_name }} ./cmd/{{ project_name }}"]
 {%- else %}
 [tasks.build]
 description = "Build packages"
@@ -30,12 +37,16 @@ run = "go build -v ./..."
 
 [tasks.ci]
 description = "Run all checks (used in GitHub Actions)"
-run = ["go test -v ./...", "go build -v ./..."]
+run = ["go test -v -coverprofile=coverage.out ./...", "go build -v ./..."]
 {%- endif %}
 
 [tasks.clean]
 description = "Clean build artifacts"
 run = "rm -f coverage.out"
+
+[tasks.demo]
+description = "Generate VHS demo recordings"
+run = 'find . -name "*.tape" -not -path "./.git/*" -exec vhs {} +'
 
 [tasks.format]
 description = "Format code with golangci-lint and golines"
