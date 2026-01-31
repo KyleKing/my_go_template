@@ -5,100 +5,42 @@
 ## Installation
 
 {% if project_type == 'cli' %}
-### Binary Installation
+{% if use_goreleaser %}
+### Homebrew
+
+```bash
+brew install {{ repository_namespace }}/tap/{{ project_name }}
+```
+
+### Go Install
+{% else %}
+### Go
+{% endif %}
 
 ```bash
 go install {{ module_path }}@latest
 ```
-
-### Build from Source
-
-```bash
-git clone {{ repository_provider }}/{{ repository_namespace }}/{{ project_name }}
-cd {{ project_name }}
-go build
-```
-
-## Usage
-
-```bash
-{{ project_name }} --help
-```
 {% elif project_type == 'library' %}
+
 ```bash
 go get {{ module_path }}
 ```
 
-## Usage
+### Usage
 
 ```go
 import "{{ module_path }}"
 ```
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for API documentation.
 {% endif %}
 
 ## Development
 
-### Prerequisites
-
-- Go (see `go.mod` for version)
-- [mise](https://mise.jdx.dev/) for task running
-- [hk](https://hk.jdx.dev/) for git hooks
-
-### Setup
-
 ```bash
-# Install tools
-mise install
-
-# Install git hooks
-hk install --mise
-
-# Run tests
-mise run test
-
-# Run all checks
+mise install && hk install --mise
 mise run ci
 ```
 
-### Testing
-
-```bash
-# Run tests with coverage
-mise run test
-
-# View coverage report
-mise run test:view-coverage
-```
-
-### Formatting
-
-```bash
-# Auto-fix linting issues
-mise run format
-
-# Or run hooks manually
-hk fix
-```
-
-## Maintenance
-
-### Updating Dependencies
-
-```bash
-go get -u ./... && go mod tidy && go test ./...
-```
-
-### Updating GitHub Actions
-
-Check for latest versions:
-- [actions/checkout](https://github.com/actions/checkout/releases)
-- [actions/setup-go](https://github.com/actions/setup-go/releases)
-- [golangci/golangci-lint-action](https://github.com/golangci/golangci-lint-action/releases)
-{% if use_goreleaser %}
-- [goreleaser/goreleaser-action](https://github.com/goreleaser/goreleaser-action/releases)
-{% endif %}
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full development workflow.
 
 ## License
 

@@ -1,31 +1,56 @@
-# Binaries
+# Built binary (from copier project_name)
+{{ project_name }}
+
+# Go binaries
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
-{{ project_name }}
 
-# Test binary
+# Test binaries and coverage
 *.test
-
-# Output of go coverage tool
 *.out
 coverage.out
+coverage.html
+*.cover
+*.coverprofile
 
-# Go workspace (local only)
+# Delve debugger
+__debug_bin*
+
+# Build artifacts
+dist/
+bin/
+build/
+
+# Go workspace files (local only)
+go.work
 go.work.sum
 
-# IDE
+# Dependency directories
+vendor/
+
+# Air (live reload) temporary directory
+tmp/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE and editors
 .idea/
 .vscode/
 *.swp
 *.swo
+*.swn
+*~
 
-# macOS
+# OS-specific
 .DS_Store
 .AppleDouble
 .LSOverride
-
-# Dependency directories
-vendor/
+Thumbs.db
+ehthumbs.db
+Desktop.ini

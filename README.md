@@ -59,7 +59,6 @@ mise run ci
 | `use_goreleaser` | `true` | Include release automation |
 | `author_name` | `Kyle King` | Your name |
 | `author_email` | - | Your email |
-| `hk_version` | `0.8.2` | Git hooks version |
 
 ## Generated Files
 
@@ -74,12 +73,12 @@ mise run ci
 ### Development
 - `.config/mise.toml` - Task definitions
 - `.config/mise.hk.toml` - Tool installations
-- `Makefile` - Simple tasks (alternative to mise)
 
 ### CI/CD
 - `.github/workflows/ci.yml` - Test and lint
 - `.github/workflows/release.yml` - GoReleaser (if enabled)
 - `.github/dependabot.yml` - Dependency updates
+- `Formula/<project>.rb` - Homebrew formula (if goreleaser enabled)
 
 ### Documentation
 - `README.md` - Project overview and usage
