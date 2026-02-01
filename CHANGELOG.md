@@ -1,3 +1,9 @@
+## v0.2.2 (2026-02-01)
+
+### Fix
+
+- split out into project-specific files to minimize clobbering
+
 ## v0.2.1 (2026-01-31)
 
 ### Fix
