@@ -1,5 +1,5 @@
 # Built binary (from copier project_name)
-test-template
+/test-template
 
 # Go binaries
 *.exe

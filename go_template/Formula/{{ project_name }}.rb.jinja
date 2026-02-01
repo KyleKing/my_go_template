@@ -2,11 +2,6 @@
 # typed: false
 # frozen_string_literal: true
 
-# Homebrew formula for {{ project_name }}
-# Install: brew install --formula ./Formula/{{ project_name }}.rb
-# Update SHA256 values after each release using:
-#   shasum -a 256 {{ project_name }}-darwin-*
-
 class {{ project_name | replace("-", " ") | title | replace(" ", "") }} < Formula
   desc "{{ project_description }}"
   homepage "{{ repository_provider }}/{{ repository_namespace }}/{{ project_name }}"
@@ -15,20 +10,20 @@ class {{ project_name | replace("-", " ") | title | replace(" ", "") }} < Formul
 
   on_macos do
     if Hardware::CPU.arm?
-      url "{{ repository_provider }}/{{ repository_namespace }}/{{ project_name }}/releases/download/v#{version}/{{ project_name }}-darwin-arm64"
+      url "#{homepage}/releases/download/v#{version}/{{ project_name }}-darwin-arm64"
       sha256 "REPLACE_WITH_SHA256_FOR_DARWIN_ARM64"
     else
-      url "{{ repository_provider }}/{{ repository_namespace }}/{{ project_name }}/releases/download/v#{version}/{{ project_name }}-darwin-amd64"
+      url "#{homepage}/releases/download/v#{version}/{{ project_name }}-darwin-amd64"
       sha256 "REPLACE_WITH_SHA256_FOR_DARWIN_AMD64"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url "{{ repository_provider }}/{{ repository_namespace }}/{{ project_name }}/releases/download/v#{version}/{{ project_name }}-linux-arm64"
+      url "#{homepage}/releases/download/v#{version}/{{ project_name }}-linux-arm64"
       sha256 "REPLACE_WITH_SHA256_FOR_LINUX_ARM64"
     else
-      url "{{ repository_provider }}/{{ repository_namespace }}/{{ project_name }}/releases/download/v#{version}/{{ project_name }}-linux-amd64"
+      url "#{homepage}/releases/download/v#{version}/{{ project_name }}-linux-amd64"
       sha256 "REPLACE_WITH_SHA256_FOR_LINUX_AMD64"
     end
   end

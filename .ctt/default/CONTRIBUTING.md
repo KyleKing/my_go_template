@@ -12,6 +12,9 @@ mise run ci
 
 ## Tasks
 
+Shared tasks live in `.config/mise.template.toml` (managed by the copier template).
+Project-specific tasks go in `.config/mise.project.toml` or other `mise.*.toml` files.
+
 | Command | Description |
 |---------|-------------|
 | `mise run bench` | Run benchmarks |
@@ -55,13 +58,37 @@ git push origin v1.0.0
 
 GitHub Actions builds binaries for Linux, macOS, Windows, and FreeBSD (amd64/arm64).
 
-After release, update the Homebrew formula:
+### Updating the Homebrew Formula
+
+After a release, update `Formula/test-template.rb`:
+
+1. Download the release binaries from the GitHub release page
+2. Generate SHA256 checksums:
+
+   ```bash
+   shasum -a 256 test-template-darwin-arm64 test-template-darwin-amd64 test-template-linux-arm64 test-template-linux-amd64
+   ```
+
+   Or run `mise run brew:sha` for a reminder of these steps.
+
+3. Update the `version` and `sha256` values in `Formula/test-template.rb`
+4. Commit and push the formula changes
+
+### Installing via Homebrew
+
+Users can install directly from the repository formula:
 
 ```bash
-mise run brew:sha
+brew install --formula https://github.com/kyleking/test-template/raw/main/Formula/test-template.rb
 ```
 
-Then update `Formula/test-template.rb` with the new version and SHA256 values.
+Or from a local checkout:
+
+```bash
+brew install --formula ./Formula/test-template.rb
+```
+
+To set up a [homebrew tap](https://docs.brew.sh/Taps) for `brew install kyleking/tap/test-template`, create a `homebrew-tap` repo at `https://github.com/kyleking/homebrew-tap` and copy the formula there.
 
 
 ## Troubleshooting

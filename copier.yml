@@ -4,6 +4,12 @@ _min_copier_version: 9.0.0
 # ====== TEMPLATE ======
 _answers_file: .copier-answers.yml
 _subdirectory: go_template
+_skip_if_exists:
+  - AGENTS.md
+  - DESIGN.md
+  - README.md
+  - .config/mise.toml
+
 _tasks:
   - git init
   - python _copier_post_generation.py

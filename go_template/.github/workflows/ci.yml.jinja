@@ -10,7 +10,7 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
+{% endraw %}
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -26,16 +26,13 @@ jobs:
 
       - uses: actions/setup-go@v6
         with:
-{% endraw -%}
+          go-version-file: '{{ "go.work" if project_type == "workspace" else "go.mod" }}'
 {%- if project_type == 'workspace' %}
-          go-version-file: 'go.work'
           cache-dependency-path: 'go.work.sum'
-{%- else %}
-          go-version-file: 'go.mod'
 {%- endif %}
 
       - run: mise run ci
-{% raw %}
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -51,13 +48,8 @@ jobs:
 
       - uses: actions/setup-go@v6
         with:
-{% endraw -%}
-{%- if project_type == 'workspace' %}
-          go-version-file: 'go.work'
-{%- else %}
-          go-version-file: 'go.mod'
-{%- endif %}
-{% raw %}
+          go-version-file: '{{ "go.work" if project_type == "workspace" else "go.mod" }}'
+
       - uses: golangci/golangci-lint-action@v7
         with:
           version: latest
@@ -70,20 +62,14 @@ jobs:
 
       - uses: actions/setup-go@v6
         with:
-{% endraw -%}
-{%- if project_type == 'workspace' %}
-          go-version-file: 'go.work'
-{%- else %}
-          go-version-file: 'go.mod'
-{%- endif %}
+          go-version-file: '{{ "go.work" if project_type == "workspace" else "go.mod" }}'
 
       - name: Run benchmarks
         run: go test -bench=. -benchmem -run=^$ ./... > bench.txt
-{% raw %}
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: benchmark-results
           path: bench.txt
           if-no-files-found: ignore
-{%- endraw %}
