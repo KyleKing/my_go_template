@@ -27,6 +27,15 @@ def cleanup_conditional_files():
         print("Removed Formula/ (no goreleaser)")
 
 
+def cleanup_legacy_files():
+    """Remove files superseded by the conf.d layout on copier update."""
+    root = Path(__file__).parent
+    legacy_tasks = root / ".config" / "mise.template.toml"
+    if legacy_tasks.exists():
+        legacy_tasks.unlink()
+        print("Removed legacy .config/mise.template.toml (tasks now in .config/mise/conf.d/)")
+
+
 def cleanup_cmd_directory():
     """Remove cmd/ directory for library projects."""
     root = Path(__file__).parent
@@ -45,6 +54,7 @@ def delete_myself():
 
 def main():
     cleanup_conditional_files()
+    cleanup_legacy_files()
     cleanup_cmd_directory()
     delete_myself()
 

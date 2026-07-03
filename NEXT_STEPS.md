@@ -7,7 +7,8 @@ Follow-up work after the 2026-07-03 audit and fixes (context in TEMPLATE_IMPROVE
 - Replace the empty-file heuristics in `_copier_post_generation.py` with a rendered `remove-if-found.txt` manifest, following calcipy_template, so `copier update` can prune obsolete files
 - Add answer validation to the post-generation script (for example, verify `module_path` ends with `project_name`) and exit nonzero on mismatch, which would have caught the gh-star-search typo
 - Upstream `testdata/` plus `internal/testutil/` scaffolding and a binary-build integration test stub, modeled on djot-fmt
-- Add `test:integration` and `bench:*` task naming conventions from gh-lazydispatch to `mise.template.toml.jinja` or document them as the expected project-local extension pattern
+- Add `test:integration` and `bench:*` task naming conventions from gh-lazydispatch to `.config/mise/conf.d/template.toml.jinja` or document them as the expected project-local extension pattern
+- Propagate the conf.d migration to each downstream project: mise never loaded `mise.template.toml` (it only loads `mise.toml` plus `mise.$MISE_ENV.toml`), so every task defined there was invisible and `mise run ci` failed with "unknown command: ci" locally and in CI. Tasks now live in `.config/mise/conf.d/template.toml`, which mise loads unconditionally, while env-gated tools stay in `mise.hk.toml`. Projects must delete the old `.config/mise.template.toml` and move any `mise.project.toml` tasks into `.config/mise/conf.d/`
 - Consider an opt-in copier question for a composite `action.yml` (doner's GitHub Action distribution pattern)
 - Tag a new release once the Unreleased changelog entries land, so projects can pin past v0.2.2
 
