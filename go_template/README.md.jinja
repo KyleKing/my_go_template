@@ -6,6 +6,14 @@
 
 {% if project_type == 'cli' %}
 {% if use_goreleaser %}
+### GH CLI Extension
+
+> **Note:** Requires a [GitHub Release]({{ repository_provider }}/{{ repository_namespace }}/{{ project_name }}/releases) with precompiled binaries. See [CONTRIBUTING.md](CONTRIBUTING.md#releases) for creating the first release.
+
+```bash
+gh extension install {{ repository_namespace }}/{{ project_name }}
+```
+
 ### Homebrew
 
 ```bash

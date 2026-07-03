@@ -88,3 +88,10 @@ use_goreleaser:
   type: bool
   help: Include goreleaser configuration for releases
   default: true
+
+# ====== INTERNAL ======
+hk_version:
+  type: str
+  help: hk git-hooks framework version pinned in hk.pkl and mise
+  default: "1.32.0"
+  when: false

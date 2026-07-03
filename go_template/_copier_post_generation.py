@@ -21,6 +21,11 @@ def cleanup_conditional_files():
         release_workflow.unlink()
         print("Removed release.yml (no goreleaser)")
 
+    formula_dir = root / "Formula"
+    if formula_dir.exists() and not goreleaser.exists():
+        shutil.rmtree(formula_dir)
+        print("Removed Formula/ (no goreleaser)")
+
 
 def cleanup_cmd_directory():
     """Remove cmd/ directory for library projects."""
@@ -33,13 +38,6 @@ def cleanup_cmd_directory():
             print("Removed empty cmd/ directory (library project)")
 
 
-def run_go_mod_init():
-    """Initialize go.mod if it doesn't exist."""
-    go_mod = Path("go.mod")
-    if not go_mod.exists():
-        print("Note: Run 'go mod init <module_path>' to initialize the module")
-
-
 def delete_myself():
     """Remove this script after execution."""
     Path(__file__).unlink()
@@ -48,7 +46,6 @@ def delete_myself():
 def main():
     cleanup_conditional_files()
     cleanup_cmd_directory()
-    run_go_mod_init()
     delete_myself()
 
 

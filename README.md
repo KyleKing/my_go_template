@@ -4,7 +4,7 @@ Copier template for Go projects with best practices, linting, testing, and CI/CD
 
 ## Features
 
-- **Project types**: CLI, library, or workspace (monorepo)
+- **Project types**: CLI or library
 - **Linting**: golangci-lint with 40+ linters
 - **Git hooks**: hk framework with pre-commit/pre-push hooks
 - **Task runner**: mise for consistent development tasks
@@ -28,13 +28,6 @@ copier copy gh:kyleking/my_go_template your-project-name
 cd your-project-name
 ```
 
-Initialize Go module:
-
-```bash
-go mod init github.com/your-username/your-project-name
-go mod tidy
-```
-
 Install tools and hooks:
 
 ```bash
@@ -52,17 +45,23 @@ mise run ci
 
 | Variable | Default | Description |
 |----------|---------|-------------|
+| `development_branch` | `main` | Branch used for development |
 | `project_name` | - | Project name (lowercase, hyphens) |
 | `project_description` | - | Brief project description |
-| `module_path` | `github.com/{namespace}/{name}` | Go module import path |
-| `project_type` | `cli` | Type: cli, library, workspace |
-| `use_goreleaser` | `true` | Include release automation |
 | `author_name` | `Kyle King` | Your name |
-| `author_email` | - | Your email |
+| `author_email` | `dev.act.kyle@gmail.com` | Your email |
+| `repository_provider` | `https://github.com` | Repository provider URL |
+| `author_username` | `kyleking` | Username on the repository provider |
+| `repository_namespace` | `{author_username}` | Repository namespace |
+| `module_path` | `github.com/{namespace}/{name}` | Go module import path |
+| `copyright_date` | current year | Copyright year for LICENSE |
+| `project_type` | `cli` | Type: cli, library |
+| `use_goreleaser` | `true` | Include release automation |
 
 ## Generated Files
 
 ### Configuration
+- `.cz.toml` - Commitizen versioning configuration
 - `.golangci.toml` - Linter configuration (40+ rules)
 - `.ls-lint.yml` - Filename convention linter
 - `hk.pkl` - Git hooks framework
@@ -73,8 +72,10 @@ mise run ci
 ### Development
 - `.config/mise.toml` - Task definitions
 - `.config/mise.hk.toml` - Tool installations
+- `go.mod` - Go module definition
 
 ### CI/CD
+- `.github/workflows/bump_version.yml` - Commitizen version bumps
 - `.github/workflows/ci.yml` - Test and lint
 - `.github/workflows/release.yml` - GoReleaser (if enabled)
 - `.github/dependabot.yml` - Dependency updates
@@ -88,7 +89,7 @@ mise run ci
 - `.github/PULL_REQUEST_TEMPLATE.md` - PR template
 
 ### Source (CLI projects)
-- `main.go` - Entry point with version/help flags
+- `cmd/<project>/main.go` - Entry point with version/help flags
 
 ## Development
 

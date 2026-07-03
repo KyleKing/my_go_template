@@ -1,0 +1,55 @@
+---
+name: CI
+
+"on":
+  pull_request: null
+  push:
+    branches: [main]
+
+jobs:
+  generate-and-build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: default
+            project_type: cli
+            use_goreleaser: true
+          - name: library
+            project_type: library
+            use_goreleaser: false
+          - name: no_goreleaser
+            project_type: cli
+            use_goreleaser: false
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: astral-sh/setup-uv@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+
+      - name: Generate project (${{ matrix.name }})
+        run: |
+          uvx copier copy --trust --defaults \
+            --data development_branch=main \
+            --data project_name=test-template \
+            --data "project_description=Generated in CI" \
+            --data "author_name=Carl The Template" \
+            --data author_email=ctt@ctt.ctt \
+            --data author_username=user_ctt \
+            --data module_path=github.com/user_ctt/test-template \
+            --data project_type=${{ matrix.project_type }} \
+            --data use_goreleaser=${{ matrix.use_goreleaser }} \
+            . "$RUNNER_TEMP/generated"
+
+      - name: Vet and build generated project
+        working-directory: ${{ runner.temp }}/generated
+        run: |
+          if [ -z "$(find . -name '*.go' -not -path './.git/*')" ]; then
+            printf 'package testtemplate\n' > lib.go
+          fi
+          go vet ./...
+          go build ./...

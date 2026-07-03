@@ -7,25 +7,6 @@ CTT_DIR=".ctt/default"
 
 echo "==> Syncing configuration files..."
 cp "$CTT_DIR/.editorconfig" go_template/.editorconfig
-cp "$CTT_DIR/.cz.toml" .cz.toml
-
-echo "==> Initializing Go module in $CTT_DIR (if needed)..."
-if [ ! -f "$CTT_DIR/go.mod" ]; then
-    (cd "$CTT_DIR" && go mod init github.com/user_ctt/test-template)
-fi
-
-echo "==> Creating minimal main.go (if empty)..."
-if [ ! -s "$CTT_DIR/main.go" ]; then
-    cat > "$CTT_DIR/main.go" << 'MAIN_GO'
-package main
-
-import "fmt"
-
-func main() {
-	fmt.Println("test-template")
-}
-MAIN_GO
-fi
 
 echo "==> Installing tools in $CTT_DIR..."
 (cd "$CTT_DIR" && mise install)

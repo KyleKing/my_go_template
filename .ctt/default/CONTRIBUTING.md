@@ -47,16 +47,56 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 Git hooks run automatically via hk on commit and push.
 
 
-## Releases
+## Development Install
 
-Automated via goreleaser on tag push:
+For GH CLI extensions, install locally during development:
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+mise run build
+gh extension install .
 ```
 
-GitHub Actions builds binaries for Linux, macOS, Windows, and FreeBSD (amd64/arm64).
+After code changes, rebuild and reinstall:
+
+```bash
+gh extension remove test-template
+mise run build
+gh extension install .
+```
+
+Or test directly without installing:
+
+```bash
+mise run build
+./test-template [args]
+```
+
+
+
+
+## Releases
+
+Automated via goreleaser on tag push. **Note:** For GH CLI extensions, the first release is required before users can run `gh extension install kyleking/test-template`.
+
+### Creating a Release
+
+1. Tag and push:
+
+   ```bash
+   git tag v0.1.0
+   git push origin v0.1.0
+   ```
+
+2. GitHub Actions will automatically:
+   - Run tests and build
+   - Create release with binaries for Linux, macOS, Windows, and FreeBSD (amd64/arm64)
+   - Publish to GitHub Releases
+
+3. Verify the release has properly named binaries:
+   - `test-template-linux-amd64`
+   - `test-template-darwin-arm64`
+   - `test-template-windows-amd64.exe`
+   - etc.
 
 ### Updating the Homebrew Formula
 

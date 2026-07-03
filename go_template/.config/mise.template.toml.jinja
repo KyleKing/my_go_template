@@ -1,8 +1,8 @@
 [tasks.bench]
 description = "Run benchmarks"
 run = "go test -bench=. -benchmem -run=^$ ./..."
+{%- if use_goreleaser %}
 
-{% if use_goreleaser -%}
 [tasks."brew:sha"]
 description = "Print SHA256 for Homebrew formula (run after release)"
 run = """
@@ -12,8 +12,8 @@ echo ""
 echo "Then update Formula/{{ project_name }}.rb with the SHA256 values and version."
 """
 {%- endif %}
+{%- if project_type == 'cli' %}
 
-{% if project_type == 'cli' -%}
 [tasks.build]
 description = "Build binary"
 run = "go build -v -o {{ project_name }} ./cmd/{{ project_name }}"
@@ -22,6 +22,7 @@ run = "go build -v -o {{ project_name }} ./cmd/{{ project_name }}"
 description = "Run all checks (used in GitHub Actions)"
 run = ["go test -v -coverprofile=coverage.out ./...", "go build -v -o {{ project_name }} ./cmd/{{ project_name }}"]
 {%- else %}
+
 [tasks.build]
 description = "Build packages"
 run = "go build -v ./..."
@@ -54,6 +55,18 @@ run = "golangci-lint run ./..."
 [tasks.test]
 description = "Run tests with coverage"
 run = "go test -coverprofile=coverage.out ./..."
+
+[tasks."test:coverage-min"]
+description = "Verify minimum coverage threshold (70%)"
+run = '''
+go test -coverprofile=coverage.out -coverpkg=./... ./...
+coverage=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
+echo "Current coverage: ${coverage}%"
+if (( $(awk "BEGIN {print ($coverage < 70)}") )); then
+    echo "Coverage ${coverage}% is below 70% minimum threshold"
+    exit 1
+fi
+'''
 
 [tasks."test:view-coverage"]
 description = "View coverage report in browser"

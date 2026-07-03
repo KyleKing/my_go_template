@@ -26,10 +26,7 @@ jobs:
 
       - uses: actions/setup-go@v6
         with:
-          go-version-file: '{{ "go.work" if project_type == "workspace" else "go.mod" }}'
-{%- if project_type == 'workspace' %}
-          cache-dependency-path: 'go.work.sum'
-{%- endif %}
+          go-version-file: 'go.mod'
 
       - run: mise run ci
 
@@ -48,7 +45,7 @@ jobs:
 
       - uses: actions/setup-go@v6
         with:
-          go-version-file: '{{ "go.work" if project_type == "workspace" else "go.mod" }}'
+          go-version-file: 'go.mod'
 
       - uses: golangci/golangci-lint-action@v7
         with:
@@ -62,7 +59,7 @@ jobs:
 
       - uses: actions/setup-go@v6
         with:
-          go-version-file: '{{ "go.work" if project_type == "workspace" else "go.mod" }}'
+          go-version-file: 'go.mod'
 
       - name: Run benchmarks
         run: go test -bench=. -benchmem -run=^$ ./... > bench.txt

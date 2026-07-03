@@ -17,3 +17,13 @@ repository_provider = "https://github.com"
 module_path = "github.com/user_ctt/test-template"
 project_type = "cli"
 use_goreleaser = true
+
+[output.".ctt/library"]
+module_path = "github.com/user_ctt/test-template"
+project_type = "library"
+use_goreleaser = false
+
+[output.".ctt/no_goreleaser"]
+module_path = "github.com/user_ctt/test-template"
+project_type = "cli"
+use_goreleaser = false

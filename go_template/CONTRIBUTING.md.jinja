@@ -45,18 +45,70 @@ Conventional commits enforced via [commitizen](https://commitizen-tools.github.i
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
 Git hooks run automatically via hk on commit and push.
+{% if project_type == 'cli' %}
+
+## Development Install{% if use_goreleaser %}
+
+For GH CLI extensions, install locally during development:
+
+```bash
+mise run build
+gh extension install .
+```
+
+After code changes, rebuild and reinstall:
+
+```bash
+gh extension remove {{ project_name }}
+mise run build
+gh extension install .
+```
+
+Or test directly without installing:
+
+```bash
+mise run build
+./{{ project_name }} [args]
+```
+{% else %}
+
+```bash
+mise run build
+./{{ project_name }} [args]
+```
+
+Or install globally:
+
+```bash
+go install ./cmd/{{ project_name }}
+```
+{% endif %}
+{% endif %}
 {% if use_goreleaser %}
 
 ## Releases
 
-Automated via goreleaser on tag push:
+Automated via goreleaser on tag push. **Note:** For GH CLI extensions, the first release is required before users can run `gh extension install {{ repository_namespace }}/{{ project_name }}`.
 
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
+### Creating a Release
 
-GitHub Actions builds binaries for Linux, macOS, Windows, and FreeBSD (amd64/arm64).
+1. Tag and push:
+
+   ```bash
+   git tag v0.1.0
+   git push origin v0.1.0
+   ```
+
+2. GitHub Actions will automatically:
+   - Run tests and build
+   - Create release with binaries for Linux, macOS, Windows, and FreeBSD (amd64/arm64)
+   - Publish to GitHub Releases
+
+3. Verify the release has properly named binaries:
+   - `{{ project_name }}-linux-amd64`
+   - `{{ project_name }}-darwin-arm64`
+   - `{{ project_name }}-windows-amd64.exe`
+   - etc.
 
 ### Updating the Homebrew Formula
 

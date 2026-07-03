@@ -1,0 +1,8 @@
+# Shared tasks are in mise.template.toml (managed by copier template)
+# Project-specific tasks belong in separate mise.*.toml files (e.g., mise.project.toml)
+
+[env]
+MISE_ENV = "hk"
+
+[settings]
+experimental = true
