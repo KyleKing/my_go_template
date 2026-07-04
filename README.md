@@ -70,8 +70,9 @@ mise run ci
 - `.gitattributes` - Line ending normalization
 
 ### Development
-- `.config/mise.toml` - Task definitions
-- `.config/mise.hk.toml` - Tool installations
+- `.config/mise.toml` - MISE_ENV selection and shared settings
+- `.config/mise.hk.toml` - Env-gated tool installations
+- `.config/mise/conf.d/template.toml` - Task definitions (loaded unconditionally, regardless of `MISE_ENV`)
 - `go.mod` - Go module definition
 
 ### CI/CD
@@ -112,6 +113,24 @@ copier copy . /tmp/test-project --data project_name=test
 # Update existing project with template changes
 copier update
 ```
+
+### Upstreaming improvements from a project
+
+Generated files split into two kinds: universal guidance shared by every project
+(for example `AGENTS.md`, the `.golangci.toml` rules, the mise task set) and
+project-specific content (`DESIGN.md`, `README.md`, source). When you improve
+*universal* guidance while working in a downstream project, mirror the change back
+here so it isn't lost on the next `copier update`:
+
+1. Make the equivalent edit in the matching template source under `go_template/`
+   (for example `go_template/AGENTS.md.jinja`), reintroducing any `{{ jinja }}`
+   variables the rendered file had filled in
+2. Verify the render still matches: `copier copy --trust . /tmp/test-project --data project_name=test` and diff the generated file
+3. Commit and tag a release (commitizen bump), then run `copier update` in the
+   downstream projects to pull the change cleanly
+
+Keep project-specific edits (`DESIGN.md`, domain docs) in the project only; those are
+protected by `_skip_if_exists` and must not be pushed into the template.
 
 ## License
 
