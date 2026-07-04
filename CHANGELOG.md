@@ -1,3 +1,9 @@
+## v0.3.1 (2026-07-04)
+
+### Refactor
+
+- condense AGENTS.md guidance and document upstreaming workflow
+
 ## v0.3.0 (2026-07-04)
 
 ### Feat
