@@ -1,3 +1,9 @@
+## v0.3.2 (2026-07-04)
+
+### Refactor
+
+- add TUI testing guidance
+
 ## v0.3.1 (2026-07-04)
 
 ### Refactor
