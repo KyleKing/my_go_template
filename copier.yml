@@ -93,5 +93,5 @@ use_goreleaser:
 hk_version:
   type: str
   help: hk git-hooks framework version pinned in hk.pkl and mise
-  default: "1.32.0"
+  default: "1.49.0"
   when: false
