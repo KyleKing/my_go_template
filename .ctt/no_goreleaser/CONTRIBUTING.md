@@ -25,6 +25,7 @@ Project-specific tasks go in additional `.config/mise/conf.d/*.toml` files, whic
 | `mise run format` | Auto-fix lint and formatting |
 | `mise run hooks` | Run git hooks |
 | `mise run lint` | Run linter |
+| `mise run run` | Run from source (`go run`, always reflects current code) |
 | `mise run test` | Run tests with coverage |
 | `mise tasks` | List all available tasks |
 
@@ -49,18 +50,11 @@ Git hooks run automatically via hk on commit and push.
 
 ## Development Install
 
-```bash
-mise run build
-./test-template [args]
-```
-
-Or install globally:
+Run straight from source with `go run`, which always reflects the current code, so there's no built binary or installed extension to go stale between edits:
 
 ```bash
-go install ./cmd/test-template
+go run ./cmd/test-template [args]
 ```
-
-
 
 
 ## Releases

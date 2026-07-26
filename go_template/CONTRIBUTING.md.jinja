@@ -25,6 +25,9 @@ Project-specific tasks go in additional `.config/mise/conf.d/*.toml` files, whic
 | `mise run format` | Auto-fix lint and formatting |
 | `mise run hooks` | Run git hooks |
 | `mise run lint` | Run linter |
+{%- if project_type == 'cli' %}
+| `mise run run` | Run from source (`go run`, always reflects current code) |
+{%- endif %}
 | `mise run test` | Run tests with coverage |
 | `mise tasks` | List all available tasks |
 
@@ -47,43 +50,24 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 Git hooks run automatically via hk on commit and push.
 {% if project_type == 'cli' %}
 
-## Development Install{% if use_goreleaser %}
+## Development Install
 
-For GH CLI extensions, install locally during development:
-
-```bash
-mise run build
-gh extension install .
-```
-
-After code changes, rebuild and reinstall:
+Run straight from source with `go run`, which always reflects the current code, so there's no built binary or installed extension to go stale between edits:
 
 ```bash
-gh extension remove {{ project_name }}
-mise run build
-gh extension install .
+go run ./cmd/{{ project_name }} [args]
 ```
+{%- if use_goreleaser %}
 
-Or test directly without installing:
+To test the actual `gh {{ project_name }} ...` extension invocation or a Homebrew install, use the released version rather than installing from this checkout:
 
 ```bash
-mise run build
-./{{ project_name }} [args]
+gh extension install {{ repository_namespace }}/{{ project_name }}
+# or
+brew install --formula {{ repository_provider }}/{{ repository_namespace }}/{{ project_name }}/raw/main/Formula/{{ project_name }}.rb
 ```
-{% else %}
-
-```bash
-mise run build
-./{{ project_name }} [args]
-```
-
-Or install globally:
-
-```bash
-go install ./cmd/{{ project_name }}
-```
-{% endif %}
-{% endif %}
+{%- endif %}
+{%- endif %}
 {% if use_goreleaser %}
 
 ## Releases
