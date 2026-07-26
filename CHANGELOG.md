@@ -1,3 +1,9 @@
+## v0.4.2 (2026-07-26)
+
+### Fix
+
+- ignore the commitizen body.md so goreleaser's dirty check passes in children
+
 ## v0.4.1 (2026-07-26)
 
 ### Fix
