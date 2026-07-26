@@ -2,6 +2,12 @@
 
 Follow-up work after the 2026-07-03 audit and fixes (context in TEMPLATE_IMPROVEMENT_PLAN.md).
 
+## Follow-ups from the 2026-07-26 freshening
+
+- Pre-v0.5.0 children need a one-time hand-sync of `.config/mise.toml` when they update (drop the [tools] block; pins now live in the copier-managed `conf.d/template.toml`). A `_migrations` entry keyed to v0.5.0 could automate this; the templates currently use no `_migrations` at all, and this is the recurring class of change that mechanism exists for
+- The `_skip_if_exists` list (AGENTS.md, DESIGN.md, README.md, .config/mise.toml) silently swallows template changes; consider a CI check or post-update note that diffs those files against the `.ctt/default` render so drift is visible
+- The commitizen-action Docker build hits Docker Hub every Bump Version run and failed once on a registry timeout; consider a non-Docker install (pipx) in the workflow
+
 ## Template
 
 - Replace the empty-file heuristics in `_copier_post_generation.py` with a rendered `remove-if-found.txt` manifest, following calcipy_template, so `copier update` can prune obsolete files
