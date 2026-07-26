@@ -24,6 +24,12 @@ replacing the manual release matrix) and is the reference for the remaining migr
 4. gh-star-search: run `copier update`, fix the `gh-start-search` answer typo (rename `cmd/gh-start-search/` and the Formula), delete the orphaned `ci.yaml`, and stop hand-editing `mise.template.toml`
 5. gh-lazydispatch: bump the template pin from v0.2.2 to the latest release
 
+## Cross-project consistency
+
+| Item | Current state | Action |
+| --- | --- | --- |
+| vhs/gif demo output path | Inconsistent: some go apps write to `.github/assets`, others to `docs/images/demo.gif` | Pick one convention and standardize across projects; impacts https://github.com/kyleking/KyleKing |
+
 ## Out of scope
 
 recipes keeps its own tooling. If desired, copy only the golangci config and hk builtins baseline manually.
