@@ -26,7 +26,7 @@ Project-specific tasks go in additional `.config/mise/conf.d/*.toml` files.
 | `mise run hooks` | Run git hooks |
 | `mise run lint` | Run linter |
 {%- if project_type == 'cli' %}
-| `mise run run` | Run from source (`go run`, always reflects current code) |
+| `mise dev` | Run from source (`go run`, always reflects current code) |
 {%- endif %}
 | `mise run test` | Run tests with coverage |
 | `mise tasks` | List all available tasks |
