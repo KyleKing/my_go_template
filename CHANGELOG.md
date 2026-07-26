@@ -1,3 +1,15 @@
+## v0.4.0 (2026-07-26)
+
+### Feat
+
+- explore freshness tool
+
+### Fix
+
+- add script for provisioning a deploy key for my private tap
+- **hk**: Pin version literally so generated configs evaluate
+- correct demo command
+
 ## v0.3.2 (2026-07-04)
 
 ### Refactor
