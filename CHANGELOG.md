@@ -1,3 +1,11 @@
+## v0.4.1 (2026-07-26)
+
+### Fix
+
+- repair golangci config for the v2 schema and pin the lint action version
+- drop MISE_ENV gating for hk tool pins
+- point local dev at go run instead of build-and-install loops
+
 ## v0.4.0 (2026-07-26)
 
 ### Feat
