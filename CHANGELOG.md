@@ -1,3 +1,9 @@
+## v0.5.1 (2026-07-26)
+
+### Fix
+
+- move template-managed tool pins into conf.d so copier updates propagate them
+
 ## v0.5.0 (2026-07-26)
 
 ### Feat
