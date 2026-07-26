@@ -1,3 +1,9 @@
+## v0.4.3 (2026-07-26)
+
+### Fix
+
+- **ci**: stop mise run from auto-installing unused tools in the ci job
+
 ## v0.4.2 (2026-07-26)
 
 ### Fix
