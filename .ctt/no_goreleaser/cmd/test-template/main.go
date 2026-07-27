@@ -31,8 +31,8 @@ func main() {
 }
 
 func run() error {
-	// TODO: Implement main logic here
-	// Consider using internal/ packages for organization
+	// Replace this stub with the real entry point.
+	// Consider using internal/ packages for organization.
 	fmt.Println("test-template: Not yet implemented")
 	return nil
 }
