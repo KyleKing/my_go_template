@@ -7,7 +7,9 @@ Follow-up work after the 2026-07-03 audit and fixes (context in TEMPLATE_IMPROVE
 All three items raised earlier in this pass are fixed. What remains:
 
 - Dependabot cannot read the action pins inside `go_template/**/*.jinja`, so the SHAs this template ships to children are still bumped by hand. Pointing Dependabot at `.ctt/default` would open PRs against generated output that the next `ctt` run reverts, so it needs a real answer (a script that rewrites the jinja sources from a child's merged bump, or accepting the manual step)
-- Dependabot PR #1 bumps actions in `.github/workflows/bump_version.yml`, which `sync_with_ctt.sh` now regenerates from the jinja source. Merging it without making the same bump in `go_template/.github/workflows/bump_version.yml.jinja` means the next sync silently reverts that half of the PR. Apply action bumps to the jinja source first, then regenerate
+- Children updating past v0.6.3 must confirm copier deleted `.github/workflows/release.yml`. goreleaser now runs inside `bump_version.yml`, and a leftover on-tag workflow would race it on any hand-pushed tag
+- gh-sweep has seven camelCase Go filenames (`ghaPerfCache.go`, `actionsErrors.go`, `actionsFlaky.go`, `commentsGraphql.go`, `ghaPerf.go`, `watchGraphql.go`, `watchGraphql_test.go`) that fail the template's `snake_case` rule. Rename them there rather than relaxing the template
+- The child render ships both `hk.pkl` and a full `.pre-commit-config.yaml`. Two hook systems in one project will drift apart. Decide whether children still need the pre-commit config now that hk covers the same ground
 - `ctt` renders in place, which is what let the committed output freeze against stale recorded answers and `_skip_if_exists` files. `sync_with_ctt.sh` now clears `.ctt/*/` first, but the `copier-template-tester` pre-commit hook still renders in place and reports a stale tree as current. Worth fixing upstream in copier-template-tester
 - The `_skip_if_exists` drift item below (2026-07-26) is now sharper: children never receive updates to `README.md`, `AGENTS.md`, `DESIGN.md`, `.config/mise.toml`, `go.mod`, or `cmd/*/main.go`, and until this pass the renders hid that
 
