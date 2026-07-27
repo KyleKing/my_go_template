@@ -1,22 +1,13 @@
 # Please see the documentation for all configuration options:
 #   https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
 
-# See Dependabot logs in: https://github.com/<owner>/<repo>/network/updates (under "Insights" tab)
+# See Dependabot logs in: https://github.com/KyleKing/my_go_template/network/updates (under "Insights" tab)
+
+# Only github-actions applies here. This repository has no Go module at its root,
+# and Dependabot cannot read the action pins inside go_template/**/*.jinja, so the
+# pins this template ships to children are still updated by hand.
 version: 2
 updates:
-  - package-ecosystem: "gomod"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    groups:
-      go-dependencies:
-        update-types:
-          - "major"
-          - "minor"
-          - "patch"
-        patterns:
-          - "*"
-
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
