@@ -64,15 +64,15 @@ go run ./cmd/test-template [args]
 To test the actual `gh test-template ...` extension invocation or a Homebrew install, use the released version rather than installing from this checkout:
 
 ```bash
-gh extension install kyleking/test-template
+gh extension install user_ctt/test-template
 # or
-brew install --formula https://github.com/kyleking/test-template/raw/main/Formula/test-template.rb
+brew install --formula https://github.com/user_ctt/test-template/raw/main/Formula/test-template.rb
 ```
 
 
 ## Releases
 
-Automated via goreleaser on tag push. **Note:** For GH CLI extensions, the first release is required before users can run `gh extension install kyleking/test-template`.
+Automated via goreleaser on tag push. **Note:** For GH CLI extensions, the first release is required before users can run `gh extension install user_ctt/test-template`.
 
 ### Creating a Release
 
@@ -115,7 +115,7 @@ After a release, update `Formula/test-template.rb`:
 Users can install directly from the repository formula:
 
 ```bash
-brew install --formula https://github.com/kyleking/test-template/raw/main/Formula/test-template.rb
+brew install --formula https://github.com/user_ctt/test-template/raw/main/Formula/test-template.rb
 ```
 
 Or from a local checkout:
@@ -124,7 +124,7 @@ Or from a local checkout:
 brew install --formula ./Formula/test-template.rb
 ```
 
-To set up a [homebrew tap](https://docs.brew.sh/Taps) for `brew install kyleking/tap/test-template`, create a `homebrew-tap` repo at `https://github.com/kyleking/homebrew-tap` and copy the formula there.
+To set up a [homebrew tap](https://docs.brew.sh/Taps) for `brew install user_ctt/tap/test-template`, create a `homebrew-tap` repo at `https://github.com/user_ctt/homebrew-tap` and copy the formula there.
 
 
 ## Troubleshooting

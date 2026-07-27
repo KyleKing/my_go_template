@@ -1,10 +1,9 @@
 # AI Agent Guidelines for test-template
 
-This document provides guidelines for AI coding assistants working on this Go project.
+Guidelines for AI coding assistants working on this Go project. Project-specific
+architecture, patterns, and domain context live in [DESIGN.md](DESIGN.md).
 
-## Code Organization
-
-### Package Structure
+## Package Structure
 
 ```
 test-template/
@@ -18,39 +17,18 @@ test-template/
 └── go.mod
 ```
 
-### Package Guidelines
-
-- One package = one purpose
-- Package names: short, lowercase, no underscores (`httputil` not `http_util`)
-- Avoid `util`, `common`, `misc` packages
+- One package, one purpose; short lowercase names with no underscores (`httputil`, not `http_util`)
+- Avoid grab-bag packages (`util`, `common`, `misc`)
 - `internal/` prevents external imports at the compiler level
-
-### File Organization
-
-- Group related types, functions, and methods in the same file
-- Name files after the primary type they contain (`user.go`, `user_test.go`)
-- Keep `main.go` minimal
+- Group related types and their methods in one file named after the primary type (`user.go`, `user_test.go`); keep `main.go` thin
 
 ## Code Style
 
-### Functional Composition
-
-```go
-func ValidateUser(u User) error {
-    if err := validateEmail(u.Email); err != nil {
-        return err
-    }
-    return validateAge(u.Age)
-}
-```
-
-### Interfaces
-
-- Define interfaces where they're used, not where they're implemented
-- Keep interfaces small (1-3 methods)
-- Avoid interface pollution
-
-### Functional Options Pattern
+- Favor small, composable, single-responsibility functions and composition over inheritance
+- Define interfaces where they are consumed, not where implemented, and keep them to 1-3 methods
+- Accept a `context.Context` as the first argument for cancellable or I/O-bound work
+- Name with MixedCaps and keep acronyms uppercase (`ServeHTTP`, `userID`, `GetHTTPClient`)
+- Use the functional-options pattern for constructors with optional configuration:
 
 ```go
 type Option func(*Server)
@@ -70,15 +48,21 @@ func NewServer(addr string, opts ...Option) *Server {
 
 ## Error Handling
 
-- Errors are values; handle them explicitly
-- Return errors, don't panic (except for truly unrecoverable states)
-- Add context when wrapping: `fmt.Errorf("doing something: %w", err)`
-- Use `errors.Is` and `errors.As` for checking errors
-- Use custom error types for domain-specific errors
+- Return errors rather than panicking outside truly unrecoverable states
+- Wrap with context: `fmt.Errorf("doing something: %w", err)`
+- Inspect with `errors.Is` / `errors.As`; define custom types for domain-specific errors
+- Validate at system boundaries and trust internal code (parse, don't validate)
+
+## Comments and Documentation
+
+- Code should be self-explanatory; do not comment what the code plainly does
+- Doc-comment exported symbols, describing non-obvious behavior and invariants rather than restating types
+- Skip docstrings on self-explanatory private helpers
 
 ## Testing
 
-### Table-Driven Tests
+- Prefer table-driven tests with subtests via `t.Run`
+- Use the `_test` package suffix for black-box tests and place tests next to the code they cover
 
 ```go
 func TestAdd(t *testing.T) {
@@ -87,15 +71,12 @@ func TestAdd(t *testing.T) {
         a, b     int
         expected int
     }{
-        {"positive numbers", 2, 3, 5},
-        {"negative numbers", -1, -1, -2},
-        {"zero", 0, 0, 0},
+        {"positive", 2, 3, 5},
+        {"negative", -1, -1, -2},
     }
-
     for _, tt := range tests {
         t.Run(tt.name, func(t *testing.T) {
-            got := Add(tt.a, tt.b)
-            if got != tt.expected {
+            if got := Add(tt.a, tt.b); got != tt.expected {
                 t.Errorf("Add(%d, %d) = %d; want %d", tt.a, tt.b, got, tt.expected)
             }
         })
@@ -103,31 +84,15 @@ func TestAdd(t *testing.T) {
 }
 ```
 
-### Test Files
-
-- Use `_test` package suffix for black-box testing
-- Place test files adjacent to the code they test
-
 ## Anti-Patterns to Avoid
 
-- **Naked returns**: Always name what you're returning
-- **Long functions**: If > 50 lines, consider breaking up
-- **Deep nesting**: Use early returns to flatten
-- **Interface pollution**: Don't define interfaces until needed
-- **Ignoring errors**: `_ = doThing()` is almost always wrong
-- **Global state**: Pass dependencies explicitly
+- Naked returns, functions over ~50 lines, and deep nesting (prefer early returns)
+- Interface pollution (define interfaces only once a consumer needs them)
+- Ignored errors (`_ = doThing()` is almost always wrong)
+- Shared global state; pass dependencies explicitly
 
-## Tools
+## Workflow
 
-- Run `mise run ci` before committing
-- Run `hk fix` to auto-fix linting issues
-- Use `golangci-lint run` for detailed linting output
-
-## Git Practices
-
+- Run `mise run ci` (tests + build) before committing; `mise run format` or `hk fix` auto-fixes lint and formatting
+- Conventional commits are enforced by commitizen
 - Do not stage, commit, or push without explicit instruction
-- Use conventional commits (commitizen enforced)
-
-## Project-Specific Guidelines
-
-See [DESIGN.md](DESIGN.md) for project-specific architecture, patterns, and domain context.

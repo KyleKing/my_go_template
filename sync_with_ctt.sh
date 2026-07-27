@@ -5,6 +5,13 @@
 
 CTT_DIR=".ctt/default"
 
+# An in-place `ctt` run reuses each render's recorded .copier-answers.yml and never
+# rewrites _skip_if_exists files, so parts of the committed output freeze at
+# whatever the template shipped when the directory was first created.
+echo "==> Regenerating renders from scratch..."
+rm -rf .ctt/*/
+ctt
+
 echo "==> Syncing configuration files..."
 cp "$CTT_DIR/.editorconfig" go_template/.editorconfig
 
