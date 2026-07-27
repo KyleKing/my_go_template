@@ -28,6 +28,9 @@ jobs:
 {% raw %}          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate GitHub Release Notes
+        # A push with no bumpable commits leaves REVISION at PREVIOUS_REVISION and
+        # cuts no tag. Releasing then overwrites the prior release with empty notes.
+        if: env.REVISION != env.PREVIOUS_REVISION
         uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3.0.1
         with:
           body_path: body.md
