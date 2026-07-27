@@ -31,7 +31,6 @@ builds:
       - goos: windows
         goarch: arm64
     binary: test-template
-    no_unique_dist_dir: true
 
 archives:
   - id: test-template
