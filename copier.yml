@@ -9,6 +9,8 @@ _skip_if_exists:
   - DESIGN.md
   - README.md
   - .config/mise.toml
+  - cmd/{{ project_name }}/main.go
+  - go.mod
 
 _tasks:
   - git init
