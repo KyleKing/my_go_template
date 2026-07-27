@@ -1,3 +1,13 @@
+## v0.6.3 (2026-07-27)
+
+### Fix
+
+- stop shipping the copier-template-tester hook to children
+- replace the goreleaser keys deprecated in v2
+- restore YAML parse checking lost in the hk migration
+- exclude golden fixtures from the hk whitespace fixers
+- run goreleaser inside the bump job and drop the unreachable release.yml
+
 ## v0.6.2 (2026-07-27)
 
 ### Fix
