@@ -2,6 +2,12 @@
 
 Follow-up work after the 2026-07-03 audit and fixes (context in TEMPLATE_IMPROVEMENT_PLAN.md).
 
+## Follow-ups from the 2026-07-27 freshening
+
+- `sync_with_ctt.sh` cannot pass as written: `mise run lint` on `.ctt/default` always fails because godox flags the `// TODO: Implement main logic here` in the generated CLI stub. Either drop godox from the template's golangci config, reword the stub, or exclude `cmd/` from that linter
+- The repo's own `.github/workflows/bump_version.yml` is a hand-maintained copy of the template's, so template workflow fixes have to be applied twice. Consider rendering it from `.ctt/default` or adding a check that the two stay in sync
+- `.github/dependabot.yml.jinja` sits in this repo's real `.github/` directory with a `.jinja` extension, so GitHub ignores it and Dependabot never runs on the template itself
+
 ## Follow-ups from the 2026-07-26 freshening
 
 - Pre-v0.5.0 children need a one-time hand-sync of `.config/mise.toml` when they update (drop the [tools] block; pins now live in the copier-managed `conf.d/template.toml`). A `_migrations` entry keyed to v0.5.0 could automate this; the templates currently use no `_migrations` at all, and this is the recurring class of change that mechanism exists for
