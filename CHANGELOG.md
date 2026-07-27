@@ -1,3 +1,12 @@
+## v0.6.2 (2026-07-27)
+
+### Fix
+
+- regenerate the .ctt renders from scratch on every sync
+- drop the TODO marker from the generated CLI stub
+- generate the root bump workflow from the template render
+- activate Dependabot on the template repo itself
+
 ## v0.6.1 (2026-07-27)
 
 ### Fix
