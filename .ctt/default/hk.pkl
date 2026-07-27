@@ -10,6 +10,12 @@ import "package://github.com/jdx/hk/releases/download/v1.53.0/hk@1.53.0#/Builtin
 
 min_hk_version = "1.53.0"
 
+// Golden files are byte-exact terminal snapshots and intentionally carry no
+// trailing newline. Any whitespace fixer that rewrites them breaks the tests.
+// Module-level so it covers newlines, trailing-whitespace, and mixed-line-ending
+// at once, none of which take a glob.
+exclude = List("**/*.golden")
+
 // Builtins carry a `check_diff`, so a clean file is never rewritten and hk
 // stages exactly the files each step touched (`stage = "<JOB_FILES>"` default).
 local linters = new Mapping<String, Step> {
