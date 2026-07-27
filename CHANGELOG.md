@@ -1,3 +1,9 @@
+## v0.6.0 (2026-07-27)
+
+### Feat
+
+- **tasks**: forward raw args on lint and test tasks
+
 ## v0.5.1 (2026-07-26)
 
 ### Fix
