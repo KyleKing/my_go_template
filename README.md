@@ -78,7 +78,7 @@ mise run ci
 ### CI/CD
 - `.github/workflows/bump_version.yml` - Commitizen version bumps
 - `.github/workflows/ci.yml` - Test and lint
-- `.github/workflows/release.yml` - GoReleaser (if enabled)
+- GoReleaser runs inside `bump_version.yml` (if enabled), because tags pushed with `GITHUB_TOKEN` never trigger a separate on-tag workflow
 - `.github/dependabot.yml` - Dependency updates
 - `Formula/<project>.rb` - Homebrew formula (if goreleaser enabled)
 
