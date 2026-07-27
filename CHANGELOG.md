@@ -1,3 +1,11 @@
+## v0.6.1 (2026-07-27)
+
+### Fix
+
+- skip the release step when commitizen makes no version bump
+- skip go.mod and cmd/{{ project_name }}/main.go on update, document conf.d load order
+- enforce snake_case for Go filenames instead of camelCase
+
 ## v0.6.0 (2026-07-27)
 
 ### Feat
