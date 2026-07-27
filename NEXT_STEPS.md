@@ -4,9 +4,11 @@ Follow-up work after the 2026-07-03 audit and fixes (context in TEMPLATE_IMPROVE
 
 ## Follow-ups from the 2026-07-27 freshening
 
-- `sync_with_ctt.sh` cannot pass as written: `mise run lint` on `.ctt/default` always fails because godox flags the `// TODO: Implement main logic here` in the generated CLI stub. Either drop godox from the template's golangci config, reword the stub, or exclude `cmd/` from that linter
-- The repo's own `.github/workflows/bump_version.yml` is a hand-maintained copy of the template's, so template workflow fixes have to be applied twice. Consider rendering it from `.ctt/default` or adding a check that the two stay in sync
-- `.github/dependabot.yml.jinja` sits in this repo's real `.github/` directory with a `.jinja` extension, so GitHub ignores it and Dependabot never runs on the template itself
+All three items raised earlier in this pass are fixed. What remains:
+
+- Dependabot cannot read the action pins inside `go_template/**/*.jinja`, so the SHAs this template ships to children are still bumped by hand. Pointing Dependabot at `.ctt/default` would open PRs against generated output that the next `ctt` run reverts, so it needs a real answer (a script that rewrites the jinja sources from a child's merged bump, or accepting the manual step)
+- `ctt` renders in place, which is what let the committed output freeze against stale recorded answers and `_skip_if_exists` files. `sync_with_ctt.sh` now clears `.ctt/*/` first, but the `copier-template-tester` pre-commit hook still renders in place and reports a stale tree as current. Worth fixing upstream in copier-template-tester
+- The `_skip_if_exists` drift item below (2026-07-26) is now sharper: children never receive updates to `README.md`, `AGENTS.md`, `DESIGN.md`, `.config/mise.toml`, `go.mod`, or `cmd/*/main.go`, and until this pass the renders hid that
 
 ## Follow-ups from the 2026-07-26 freshening
 
