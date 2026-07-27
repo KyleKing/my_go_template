@@ -35,14 +35,14 @@ builds:
 
 archives:
   - id: {{ project_name }}
-    format: binary
+    formats: [binary]
     name_template: "{{ project_name }}-{{ "{{" }} .Os {{ "}}" }}-{{ "{{" }} .Arch {{ "}}" }}"
 
 checksum:
   name_template: "checksums.txt"
 
 snapshot:
-  name_template: "{{ "{{" }} .Tag {{ "}}" }}-next"
+  version_template: "{{ "{{" }} .Version {{ "}}" }}-next"
 
 changelog:
   use: github
