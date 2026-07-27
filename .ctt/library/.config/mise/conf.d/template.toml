@@ -30,10 +30,12 @@ run = "hk fix --quiet"
 [tasks.lint]
 description = "Run linter"
 run = "golangci-lint run ./..."
+raw_args = true
 
 [tasks.test]
 description = "Run tests with coverage"
 run = "go test -coverprofile=coverage.out ./..."
+raw_args = true
 
 [tasks."test:coverage-min"]
 description = "Verify minimum coverage threshold (70%)"

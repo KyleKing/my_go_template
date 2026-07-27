@@ -46,6 +46,7 @@ depends = ["build"]
 [tasks.dev]
 description = "Run from source (always reflects current code, no stale build)"
 run = "go run ./cmd/{{ project_name }}"
+raw_args = true
 {%- endif %}
 
 [tasks.format]
@@ -59,10 +60,12 @@ run = "hk fix --quiet"
 [tasks.lint]
 description = "Run linter"
 run = "golangci-lint run ./..."
+raw_args = true
 
 [tasks.test]
 description = "Run tests with coverage"
 run = "go test -coverprofile=coverage.out ./..."
+raw_args = true
 
 [tasks."test:coverage-min"]
 description = "Verify minimum coverage threshold (70%)"
