@@ -21,10 +21,28 @@ def cleanup_conditional_files():
         release_workflow.unlink()
         print("Removed release.yml (no goreleaser)")
 
-    formula_dir = root / "Formula"
-    if formula_dir.exists() and not goreleaser.exists():
-        shutil.rmtree(formula_dir)
-        print("Removed Formula/ (no goreleaser)")
+
+def cleanup_removed_files():
+    """Prune paths the template no longer renders.
+
+    copier leaves a file in place once the template stops rendering it, so the
+    manifest is the only way a `copier update` sheds one.
+    """
+    root = Path(__file__).parent
+    manifest = root / "remove-if-found.txt"
+    if not manifest.is_file():
+        return
+    for line in manifest.read_text().splitlines():
+        target = root / line.strip()
+        if not line.strip():
+            continue
+        if target.is_file():
+            target.unlink()
+            print(f"Removed {line.strip()}")
+        elif target.is_dir():
+            shutil.rmtree(target)
+            print(f"Removed {line.strip()}/")
+    manifest.unlink()
 
 
 def cleanup_legacy_files():
@@ -55,6 +73,7 @@ def delete_myself():
 def main():
     cleanup_conditional_files()
     cleanup_legacy_files()
+    cleanup_removed_files()
     cleanup_cmd_directory()
     delete_myself()
 
