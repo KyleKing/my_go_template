@@ -1,3 +1,14 @@
+## v0.7.0 (2026-07-30)
+
+### Feat
+
+- **release**: publish a Homebrew cask from goreleaser
+
+### Fix
+
+- **hooks**: drop toml-sort so tombi is the only TOML formatter
+- **scripts**: document GH_TOKEN
+
 ## v0.6.5 (2026-07-30)
 
 ### Fix
