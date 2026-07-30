@@ -66,7 +66,7 @@ To test the actual `gh test-template ...` extension invocation or a Homebrew ins
 ```bash
 gh extension install user_ctt/test-template
 # or
-brew install --formula https://github.com/user_ctt/test-template/raw/main/Formula/test-template.rb
+brew install --cask user_ctt/tap/test-template
 ```
 
 
@@ -91,37 +91,15 @@ Automated by the Bump Version workflow. **Note:** For GH CLI extensions, the fir
    - `test-template-windows-amd64.exe`
    - etc.
 
-### Updating the Homebrew Formula
-
-After a release, update `Formula/test-template.rb`:
-
-1. Download the release binaries from the GitHub release page
-2. Generate SHA256 checksums:
-
-   ```bash
-   shasum -a 256 test-template-darwin-arm64 test-template-darwin-amd64 test-template-linux-arm64 test-template-linux-amd64
-   ```
-
-   Or run `mise run brew:sha` for a reminder of these steps.
-
-3. Update the `version` and `sha256` values in `Formula/test-template.rb`
-4. Commit and push the formula changes
-
 ### Installing via Homebrew
 
-Users can install directly from the repository formula:
+goreleaser builds the cask and pushes it to `https://github.com/user_ctt/homebrew-tap` as part of the release, with the SHA256 values taken from the artifacts it just built:
 
 ```bash
-brew install --formula https://github.com/user_ctt/test-template/raw/main/Formula/test-template.rb
+brew install --cask user_ctt/tap/test-template
 ```
 
-Or from a local checkout:
-
-```bash
-brew install --formula ./Formula/test-template.rb
-```
-
-To set up a [homebrew tap](https://docs.brew.sh/Taps) for `brew install user_ctt/tap/test-template`, create a `homebrew-tap` repo at `https://github.com/user_ctt/homebrew-tap` and copy the formula there.
+The push needs a `TAP_DEPLOY_KEY` secret scoped to the tap repo; run `scripts/provision-tap-deploy-key.sh` to create it. Without the secret the release still publishes every binary and skips the cask with a warning.
 
 
 ## Troubleshooting
