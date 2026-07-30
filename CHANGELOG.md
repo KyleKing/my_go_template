@@ -1,3 +1,14 @@
+## v0.8.0 (2026-07-30)
+
+### Feat
+
+- prune the Formula stub from children via a remove-if-found manifest
+- **hooks**: backfill the prek hooks hk.pkl was missing
+
+### Fix
+
+- **hooks**: stop newlines from stripping copier's trailing blank line
+
 ## v0.7.0 (2026-07-30)
 
 ### Feat
