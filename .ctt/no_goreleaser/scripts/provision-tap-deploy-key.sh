@@ -16,6 +16,14 @@
 #             and must already exist
 # Environment:
 #   OP_VAULT  1Password vault for the archived key (default: Private)
+#   GH_TOKEN  optional override for the token gh uses; recommended if your
+#             default gh auth token is shared across repos, since the token
+#             running this script needs elevated, repo-scoped permissions:
+#               tap repo:     Administration: Read and write (deploy keys)
+#               current repo: Secrets: Read and write (Actions secret)
+#             A fine-grained PAT limited to just these two repos with just
+#             these two permissions avoids granting Administration on every
+#             repo your everyday token can reach.
 
 set -euo pipefail
 
