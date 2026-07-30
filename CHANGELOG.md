@@ -1,3 +1,9 @@
+## v0.6.5 (2026-07-30)
+
+### Fix
+
+- **scripts**: archive tap deploy key via 1Password template and dedupe on re-run
+
 ## v0.6.4 (2026-07-27)
 
 ### Fix
