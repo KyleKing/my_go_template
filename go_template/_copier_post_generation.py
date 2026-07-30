@@ -2,7 +2,56 @@
 """Post-generation tasks for go_template."""
 
 import shutil
+import sys
 from pathlib import Path
+
+
+def _read_answers(answers_file):
+    """Parse the flat scalar answers copier just wrote.
+
+    Deliberately not PyYAML: copier runs this with whatever python is on PATH.
+    """
+    answers = {}
+    for line in answers_file.read_text().splitlines():
+        if line.startswith(("#", " ", "-")) or ":" not in line:
+            continue
+        key, _, value = line.partition(":")
+        answers[key.strip()] = value.strip().strip("'\"")
+    return answers
+
+
+def validate_answers():
+    """Reject answers that contradict each other before they reach a real project.
+
+    A project_name typo renders cleanly and stays wrong for months, because every
+    later `copier update` reverts the hand-fixes it forces.
+    """
+    root = Path(__file__).parent
+    answers = _read_answers(root / ".copier-answers.yml")
+    project_name = answers.get("project_name", "")
+    module_path = answers.get("module_path", "")
+    namespace = answers.get("repository_namespace", "")
+
+    errors = []
+    if not module_path.endswith("/" + project_name):
+        errors.append(
+            f"module_path '{module_path}' must end with '/{project_name}'. "
+            f"Fix whichever answer is misspelled: the two names drive cmd/, the "
+            f"binary, the module import path, and the release artifacts separately, "
+            f"so a mismatch leaves the project half-renamed.",
+        )
+    if namespace and "/" + namespace + "/" not in module_path:
+        errors.append(
+            f"module_path '{module_path}' does not contain repository_namespace "
+            f"'{namespace}'. Set module_path to '<host>/{namespace}/{project_name}', "
+            f"or correct repository_namespace so it matches where the repo lives.",
+        )
+
+    if errors:
+        print("\nCopier answers are inconsistent:\n")
+        for error in errors:
+            print(f"  - {error}\n")
+        sys.exit(1)
 
 
 def cleanup_conditional_files():
@@ -71,6 +120,7 @@ def delete_myself():
 
 
 def main():
+    validate_answers()
     cleanup_conditional_files()
     cleanup_legacy_files()
     cleanup_removed_files()
