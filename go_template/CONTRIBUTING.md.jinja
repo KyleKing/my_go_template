@@ -23,17 +23,23 @@ sorts after `template.toml` (`user.toml` works; `project.toml` does not, since
 | Command | Description |
 |---------|-------------|
 | `mise run bench` | Run benchmarks |
+{%- if project_type == 'cli' %}
 | `mise run build` | Build binary |
+{%- else %}
+| `mise run build` | Build packages |
+{%- endif %}
 | `mise run ci` | Full CI check (tests + build) |
 | `mise run clean` | Clean build artifacts |
-| `mise run demo` | Generate VHS demo recordings |
+| `mise run demo` | Generate VHS demo recordings (needs [vhs](https://github.com/charmbracelet/vhs) on `PATH`; it is not pinned in `[tools]`) |
+{%- if project_type == 'cli' %}
+| `mise run dev` | Run from source (`go run`, always reflects current code) |
+{%- endif %}
 | `mise run format` | Auto-fix lint and formatting |
 | `mise run hooks` | Run git hooks |
 | `mise run lint` | Run linter |
-{%- if project_type == 'cli' %}
-| `mise dev` | Run from source (`go run`, always reflects current code) |
-{%- endif %}
 | `mise run test` | Run tests with coverage |
+| `mise run test:coverage-min` | Fail below the 70% coverage threshold |
+| `mise run test:view-coverage` | Open the coverage report in a browser |
 | `mise tasks` | List all available tasks |
 
 ## Code Guidelines
@@ -64,20 +70,35 @@ go run ./cmd/{{ project_name }} [args]
 ```
 {%- if use_goreleaser %}
 
-To test the actual `gh {{ project_name }} ...` extension invocation or a Homebrew install, use the released version rather than installing from this checkout:
+Or through mise, which runs the same thing:
+
+```bash
+mise run dev [args]
+```
+{%- if project_name.startswith('gh-') %}
+
+To test the actual `gh {{ project_name[3:] }} ...` invocation (the GitHub CLI strips the `gh-` prefix from the repository name) or a Homebrew install, use the released version rather than installing from this checkout:
 
 ```bash
 gh extension install {{ repository_namespace }}/{{ project_name }}
 # or
 brew install --cask {{ repository_namespace }}/tap/{{ project_name }}
 ```
+{%- else %}
+
+To test a Homebrew install, use the released version rather than installing from this checkout:
+
+```bash
+brew install --cask {{ repository_namespace }}/tap/{{ project_name }}
+```
+{%- endif %}
 {%- endif %}
 {%- endif %}
 {% if use_goreleaser %}
 
 ## Releases
 
-Automated by the Bump Version workflow. **Note:** For GH CLI extensions, the first release is required before users can run `gh extension install {{ repository_namespace }}/{{ project_name }}`.
+Automated by the Bump Version workflow.{% if project_name.startswith('gh-') %} **Note:** the first release is required before users can run `gh extension install {{ repository_namespace }}/{{ project_name }}`.{% endif %}
 
 ### Creating a Release
 
@@ -120,4 +141,8 @@ gh release create v1.0.0 --generate-notes
 mise install --force   # Reinstall tools
 hk install --mise --force  # Reinstall hooks
 go test -v -run TestName ./package  # Debug specific test
+go test ./... -update  # Refresh golden fixtures, where the project has them
 ```
+
+Golden files are byte-exact snapshots, so `hk.pkl` excludes `**/*.golden` from every
+whitespace fixer. Regenerate them with `-update` and review the diff; never hand-edit.

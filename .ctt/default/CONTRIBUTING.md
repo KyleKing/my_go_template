@@ -26,12 +26,14 @@ sorts after `template.toml` (`user.toml` works; `project.toml` does not, since
 | `mise run build` | Build binary |
 | `mise run ci` | Full CI check (tests + build) |
 | `mise run clean` | Clean build artifacts |
-| `mise run demo` | Generate VHS demo recordings |
+| `mise run demo` | Generate VHS demo recordings (needs [vhs](https://github.com/charmbracelet/vhs) on `PATH`; it is not pinned in `[tools]`) |
+| `mise run dev` | Run from source (`go run`, always reflects current code) |
 | `mise run format` | Auto-fix lint and formatting |
 | `mise run hooks` | Run git hooks |
 | `mise run lint` | Run linter |
-| `mise dev` | Run from source (`go run`, always reflects current code) |
 | `mise run test` | Run tests with coverage |
+| `mise run test:coverage-min` | Fail below the 70% coverage threshold |
+| `mise run test:view-coverage` | Open the coverage report in a browser |
 | `mise tasks` | List all available tasks |
 
 ## Code Guidelines
@@ -61,18 +63,22 @@ Run straight from source with `go run`, which always reflects the current code, 
 go run ./cmd/test-template [args]
 ```
 
-To test the actual `gh test-template ...` extension invocation or a Homebrew install, use the released version rather than installing from this checkout:
+Or through mise, which runs the same thing:
 
 ```bash
-gh extension install user_ctt/test-template
-# or
+mise run dev [args]
+```
+
+To test a Homebrew install, use the released version rather than installing from this checkout:
+
+```bash
 brew install --cask user_ctt/tap/test-template
 ```
 
 
 ## Releases
 
-Automated by the Bump Version workflow. **Note:** For GH CLI extensions, the first release is required before users can run `gh extension install user_ctt/test-template`.
+Automated by the Bump Version workflow.
 
 ### Creating a Release
 
@@ -108,4 +114,8 @@ The push needs a `TAP_DEPLOY_KEY` secret scoped to the tap repo; run `scripts/pr
 mise install --force   # Reinstall tools
 hk install --mise --force  # Reinstall hooks
 go test -v -run TestName ./package  # Debug specific test
+go test ./... -update  # Refresh golden fixtures, where the project has them
 ```
+
+Golden files are byte-exact snapshots, so `hk.pkl` excludes `**/*.golden` from every
+whitespace fixer. Regenerate them with `-update` and review the diff; never hand-edit.

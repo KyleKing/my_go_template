@@ -2,6 +2,15 @@
 
 Follow-up work after the 2026-07-03 audit and fixes (context in TEMPLATE_IMPROVEMENT_PLAN.md).
 
+## Follow-ups from the 2026-07-30 freshening
+
+- The new CI `hooks` job turns four children red on their next update, each on a real finding: gh-sweep (1 typo in `ROADMAP.md`), gh-repo-dashboard (2 typos in `doing.txt` and `ROADMAP.md`), gh-star-search (1 typo in `internal/python/scripts/evaluate_embeddings.py`), gh-lazydispatch (shellcheck SC2044 in `scripts/check-test-safety.sh`). Fix each in the child, not by relaxing the template
+- jj-diff additionally fails `check-merge-conflict` on `.jj-diff-roadmap.md`, which documents conflict markers as content. It needs a project-local `exclude` on that step, which is the first case of a child legitimately overriding a template hook
+- typos flags deliberate fixture strings in jj-diff's `internal/fuzzy/fuzzy_test.go`. A project-local `[default.extend-words]` in its `.typos.toml` is the fix; the template file is the base and children extend it
+- The child render still ships both `hk.pkl` and a full `.pre-commit-config.yaml`. Now that CI runs `hk check --all`, the pre-commit config is the odd one out and should go
+- `mise run demo` needs vhs, which is not pinned in `[tools]` because it would be installed on every CI run of the new hooks job. Documented as a manual prerequisite instead
+- Dependabot cannot read the action pins inside `go_template/**/*.jinja`, so the SHAs this template ships are still bumped by hand (deferred deliberately)
+
 ## Follow-ups from the 2026-07-29 freshening
 
 - Run `scripts/provision-tap-deploy-key.sh` in each goreleaser child that should publish to the tap. Only gh-repo-dashboard has it today; the rest release fine without the secret (the cask push skips with a warning) but ship no cask

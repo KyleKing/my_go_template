@@ -23,14 +23,16 @@ sorts after `template.toml` (`user.toml` works; `project.toml` does not, since
 | Command | Description |
 |---------|-------------|
 | `mise run bench` | Run benchmarks |
-| `mise run build` | Build binary |
+| `mise run build` | Build packages |
 | `mise run ci` | Full CI check (tests + build) |
 | `mise run clean` | Clean build artifacts |
-| `mise run demo` | Generate VHS demo recordings |
+| `mise run demo` | Generate VHS demo recordings (needs [vhs](https://github.com/charmbracelet/vhs) on `PATH`; it is not pinned in `[tools]`) |
 | `mise run format` | Auto-fix lint and formatting |
 | `mise run hooks` | Run git hooks |
 | `mise run lint` | Run linter |
 | `mise run test` | Run tests with coverage |
+| `mise run test:coverage-min` | Fail below the 70% coverage threshold |
+| `mise run test:view-coverage` | Open the coverage report in a browser |
 | `mise tasks` | List all available tasks |
 
 ## Code Guidelines
@@ -66,4 +68,8 @@ gh release create v1.0.0 --generate-notes
 mise install --force   # Reinstall tools
 hk install --mise --force  # Reinstall hooks
 go test -v -run TestName ./package  # Debug specific test
+go test ./... -update  # Refresh golden fixtures, where the project has them
 ```
+
+Golden files are byte-exact snapshots, so `hk.pkl` excludes `**/*.golden` from every
+whitespace fixer. Regenerate them with `-update` and review the diff; never hand-edit.
