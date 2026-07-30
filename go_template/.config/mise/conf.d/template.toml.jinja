@@ -20,7 +20,10 @@ run = "go build -v -o {{ project_name }} ./cmd/{{ project_name }}"
 
 [tasks.ci]
 description = "Run all checks (used in GitHub Actions)"
-run = ["go test -v -coverprofile=coverage.out ./...", "go build -v -o {{ project_name }} ./cmd/{{ project_name }}"]
+run = [
+  "go test -v -coverprofile=coverage.out ./...",
+  "go build -v -o {{ project_name }} ./cmd/{{ project_name }}"
+]
 {%- else %}
 
 [tasks.build]

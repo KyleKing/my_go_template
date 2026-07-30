@@ -2,6 +2,15 @@
 
 Follow-up work after the 2026-07-03 audit and fixes (context in TEMPLATE_IMPROVEMENT_PLAN.md).
 
+## Follow-ups from the 2026-07-29 freshening
+
+- Run `scripts/provision-tap-deploy-key.sh` in each goreleaser child that should publish to the tap. Only gh-repo-dashboard has it today; the rest release fine without the secret (the cask push skips with a warning) but ship no cask
+- gh-repo-dashboard carries the `homebrew_casks` block and the `TAP_DEPLOY_KEY` env line locally. Its next `copier update` will conflict on both, and the template version is now authoritative: take the template hunk and delete the local one
+- gh-star-search excludes `.golangci.toml` from `toml-sort-fix` to protect the gci `sections` order. tombi does not sort arrays, so that exclusion (and the whole toml-sort block) is dead config in every child on its next update
+- gh-star-search and gh-lazydispatch have prek installed as their `.git/hooks/pre-commit` while gh-sweep has hk. With toml-sort gone, a prek-only child formats no TOML at all until it runs `hk install --mise`
+- Nothing formats TOML in this repo now, so the `.toml.jinja` sources and the committed `.ctt/` renders stay tombi-clean only by hand. `tombi format --check` over `.ctt/**/*.toml` after a render is the check; a local hk config here would automate it
+- The hand-written `Formula/{{ project_name }}.rb` stub still ships with `REPLACE_WITH_SHA256_*` placeholders and a `release:homebrew` mise task that tells you to fill them in. goreleaser now generates the cask, so both are redundant; removing them needs the `remove-if-found.txt` manifest below
+
 ## Follow-ups from the 2026-07-27 freshening
 
 All three items raised earlier in this pass are fixed. What remains:

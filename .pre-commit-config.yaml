@@ -40,12 +40,9 @@ repos:
     hooks:
       - id: commitizen
 
-  - repo: https://github.com/pappasam/toml-sort
-    rev: v0.24.4
-    hooks:
-      - id: toml-sort-fix
-        stages: ["pre-commit"]
-
+  # No TOML formatter here on purpose. Children format TOML with hk's
+  # `tombi-format`, and a toml-sort run in this repo reshaped the committed
+  # .ctt/ renders into a form every child then rewrote on its first commit.
   - repo: https://github.com/KyleKing/calcipy
     rev: 6.0.1
     hooks:
