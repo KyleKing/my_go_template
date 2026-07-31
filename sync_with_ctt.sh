@@ -5,6 +5,14 @@
 
 CTT_DIR=".ctt/default"
 
+# The renders below are deleted with a relative glob, so run from the template
+# root or not at all.
+cd "$(dirname "$(realpath "$0")")"
+if [ ! -f ctt.toml ] || [ ! -d go_template ]; then
+    echo "Refusing to run: $PWD is not the template root" >&2
+    exit 1
+fi
+
 # An in-place `ctt` run reuses each render's recorded .copier-answers.yml and never
 # rewrites _skip_if_exists files, so parts of the committed output freeze at
 # whatever the template shipped when the directory was first created.
