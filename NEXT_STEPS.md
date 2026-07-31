@@ -67,6 +67,14 @@ real finding. Fix each in the child, not by relaxing the template.
 - gh-sweep and gh-repo-dashboard had their notes-file typos fixed on 2026-07-27
   and should now be clean, but neither has been re-measured against the v0.9.0
   hook set
+- `AGENTS.md` is in `_skip_if_exists`, so no child picks up the v0.9.0+ rewrite.
+  Bring the five toward it by hand, keeping each one's real local content (the
+  package tree, and jj-diff's TUI section). `CLAUDE.md` is not skipped, so
+  gh-star-search and jj-diff get the `@AGENTS.md` bridge automatically; without
+  it Claude Code was never loading their `AGENTS.md` at all
+- gh-star-search and gh-lazydispatch still carry the pre-v0.6 `AGENTS.md` shape
+  (`### Package Guidelines`, `### File Organization`), so their diff against the
+  new seed is the largest
 
 ## Remaining project migrations
 
