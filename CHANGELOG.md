@@ -1,3 +1,9 @@
+## v0.9.1 (2026-07-31)
+
+### Fix
+
+- **scripts**: refuse to delete renders outside the template root
+
 ## v0.9.0 (2026-07-30)
 
 ### Feat
