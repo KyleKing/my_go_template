@@ -91,11 +91,13 @@ Automated by the Bump Version workflow.
 
    goreleaser runs inside that same workflow because a tag pushed with `GITHUB_TOKEN` does not trigger any other workflow.
 
-3. Verify the release has properly named binaries:
-   - `test-template-linux-amd64`
-   - `test-template-darwin-arm64`
-   - `test-template-windows-amd64.exe`
-   - etc.
+3. Verify the release by distinct hash, not by asset count. Every target is a separate build, so the checksums must all differ; a repeated hash means one binary was published under several names:
+
+   ```bash
+   gh release download <tag> -p checksums.txt -O - | awk '{print $1}' | sort -u | wc -l
+   ```
+
+   Expect one line per binary. Names should read `test-template-linux-amd64`, `test-template-darwin-arm64`, `test-template-windows-amd64.exe`, and so on.
 
 ### Installing via Homebrew
 
