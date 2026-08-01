@@ -141,8 +141,10 @@ here so it isn't lost on the next `copier update`:
 3. Commit and tag a release (commitizen bump), then run `copier update` in the
    downstream projects to pull the change cleanly
 
-Keep project-specific edits (`DESIGN.md`, domain docs) in the project only; those are
-protected by `_skip_if_exists` and must not be pushed into the template.
+Keep project-specific edits in the project only: `DESIGN.md` is protected by
+`_skip_if_exists`, and agent guidance that applies to one project belongs in
+`AGENTS.local.md`, which the template never renders. `AGENTS.md` itself is
+template-owned and synced on every update.
 
 ## License
 

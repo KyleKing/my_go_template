@@ -100,5 +100,8 @@ hook blocks committing them). Two specifics:
   that the patch needs re-applying.** Read `.copier-answers.yml` first and fix the
   answer; a typo there gets faithfully re-rendered every pass.
 
-A directory may add its own `AGENTS.md` to extend or override this file for the code
-under it. Template updates never overwrite any `AGENTS.md`.
+This file is template-owned and `copier update` keeps it current. Put project-specific
+guidance in `AGENTS.local.md` (loaded below when present) or in a nested `AGENTS.md`
+scoped to its directory.
+
+@AGENTS.local.md
