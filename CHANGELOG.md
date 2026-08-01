@@ -1,3 +1,9 @@
+## v0.9.2 (2026-08-01)
+
+### Fix
+
+- **hk**: skip the commitizen branch check on an empty rev-range
+
 ## v0.9.1 (2026-07-31)
 
 ### Fix
