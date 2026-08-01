@@ -16,8 +16,10 @@ gh extension install user_ctt/test-template
 
 ### Homebrew
 
+goreleaser publishes a cask to [`user_ctt/homebrew-tap`](https://github.com/user_ctt/homebrew-tap) with each release, so the install needs `--cask`:
+
 ```bash
-brew install user_ctt/tap/test-template
+brew install --cask user_ctt/tap/test-template
 ```
 
 ### Go Install

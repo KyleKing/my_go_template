@@ -16,8 +16,10 @@ gh extension install {{ repository_namespace }}/{{ project_name }}
 
 ### Homebrew
 
+goreleaser publishes a cask to [`{{ repository_namespace }}/homebrew-tap`]({{ repository_provider }}/{{ repository_namespace }}/homebrew-tap) with each release, so the install needs `--cask`:
+
 ```bash
-brew install {{ repository_namespace }}/tap/{{ project_name }}
+brew install --cask {{ repository_namespace }}/tap/{{ project_name }}
 ```
 
 ### Go Install
