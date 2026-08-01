@@ -6,6 +6,7 @@ _answers_file: .copier-answers.yml
 _subdirectory: go_template
 _skip_if_exists:
   - AGENTS.md
+  - "**/AGENTS.md"
   - DESIGN.md
   - README.md
   - .config/mise.toml

@@ -117,3 +117,6 @@ hook blocks committing them). Two specifics:
 - **The same file conflicting on two consecutive updates means an answer is wrong, not
   that the patch needs re-applying.** Read `.copier-answers.yml` first and fix the
   answer; a typo there gets faithfully re-rendered every pass.
+
+A directory may add its own `AGENTS.md` to extend or override this file for the code
+under it. Template updates never overwrite any `AGENTS.md`.

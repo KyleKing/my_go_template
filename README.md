@@ -1,17 +1,8 @@
 # my_go_template
 
-Copier template for Go projects with best practices, linting, testing, and CI/CD.
+Copier template for Go CLIs and libraries.
 
-## Features
-
-- **Project types**: CLI or library
-- **Linting**: golangci-lint with 40+ linters
-- **Git hooks**: hk framework with pre-commit/pre-push hooks
-- **Task runner**: mise for consistent development tasks
-- **CI/CD**: GitHub Actions with testing and linting
-- **Release**: goreleaser for multi-platform binaries (CLI projects)
-- **Documentation**: README, CONTRIBUTING, AGENTS.md (AI guidelines)
-- **Dependencies**: Dependabot for automated updates
+Generated projects get golangci-lint, hk git hooks, mise tasks, Dependabot, an `AGENTS.md` with a `CLAUDE.md` pointer, and GitHub Actions CI with commitizen version bumps. CLI projects also get goreleaser multi-platform releases.
 
 ## Usage
 
