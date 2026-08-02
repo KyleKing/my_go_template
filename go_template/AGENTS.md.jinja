@@ -91,9 +91,14 @@ commit; either rename it or add its glob to that exclude.
 A subprocess pipe is not a terminal, so the program detects a non-tty and never renders.
 Exploratory checks need a real PTY: run it under `tmux new -d -x 80 -y 24 <cmd>`, drive
 it with `tmux send-keys`, and read what actually rendered with `tmux capture-pane -p`
-(`-e` keeps ANSI codes). For scripted tests prefer
+(`-e` keeps ANSI codes). A tab in captured output is not proof the program emitted one:
+`tmux capture-pane` re-emits a tab wherever the cursor was advanced across cells that
+were never written. Check which column the text actually lands on before chasing it as
+a rendering bug. For scripted tests prefer
 `github.com/charmbracelet/x/exp/teatest`, which drives the `tea.Model` directly and
-diffs golden frames; fall back to `github.com/creack/pty` for non-Bubble Tea binaries.
+diffs golden frames; on Bubble Tea v2 that import is
+`github.com/charmbracelet/x/exp/teatest/v2`, because the unsuffixed module targets v1.
+Fall back to `github.com/creack/pty` for non-Bubble Tea binaries.
 
 Exercise deliberately, because each of these renders fine in the happy path and breaks
 elsewhere: resize mid-session (`SIGWINCH`) and the minimum supported size; every quit
