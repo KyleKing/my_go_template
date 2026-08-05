@@ -1,8 +1,10 @@
 # Next Steps
 
 Open work for my_go_template and its children. Everything here was verified
-against the repo on 2026-07-27; anything that turned out to be done was removed
-rather than marked done. The append-only pass log lives in `.freshen.md`.
+against the repo on 2026-07-27, and anything that turned out to be done was
+removed rather than marked done. Settled design choices live in
+[docs/DECISIONS.md](docs/DECISIONS.md), and the per-change history lives in the
+git log.
 
 Template is at v0.9.0. All five children (`gh-sweep`, `gh-repo-dashboard`,
 `gh-star-search`, `gh-lazydispatch`, `jj-diff`) are pinned at v0.7.0, so the

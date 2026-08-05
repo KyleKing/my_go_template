@@ -1,8 +1,11 @@
 # AI Agent Guidelines for test-template
 
 How to work in this Go project. Architecture and domain context live in
-[DESIGN.md](DESIGN.md); task and release mechanics live in
-[CONTRIBUTING.md](CONTRIBUTING.md). This file covers only what those two do not.
+[DESIGN.md](DESIGN.md), task and release mechanics live in
+[CONTRIBUTING.md](CONTRIBUTING.md), worked code examples live in
+[docs/go-best-practices.md](docs/go-best-practices.md), and toolchain failures live
+in [docs/troubleshooting.md](docs/troubleshooting.md). This file covers only what
+those do not.
 
 ## Verify before you report
 
@@ -41,12 +44,9 @@ report what you found.
 
 ## Layout
 
-```
-test-template/
-├── cmd/test-template/  # main package, kept thin
-├── internal/         # private packages; the compiler blocks outside imports
-└── go.mod
-```
+The entry point lives in `cmd/test-template/` and stays thin, delegating to
+`internal/`. The compiler blocks imports of `internal/` from outside this module,
+so anything under it can change freely.
 
 One package, one purpose. Short lowercase names, no underscores (`httputil`, not
 `http_util`), and no grab-bags (`util`, `common`, `misc`). Name a file after the
@@ -69,6 +69,9 @@ primary type it holds (`user.go`, `user_test.go`).
 Avoid: naked returns, functions past ~50 lines, deep nesting (return early), ignored
 errors (`_ = doThing()` is almost always wrong), and shared global state (pass
 dependencies explicitly).
+
+[docs/go-best-practices.md](docs/go-best-practices.md) has a worked example of each
+pattern above, plus the package layout rules and the anti-pattern list in full.
 
 ## Testing
 

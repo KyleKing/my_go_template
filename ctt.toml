@@ -27,3 +27,9 @@ use_goreleaser = false
 module_path = "github.com/user_ctt/test-template"
 project_type = "cli"
 use_goreleaser = false
+
+[output.".ctt/python"]
+module_path = "github.com/user_ctt/test-template"
+project_type = "cli"
+publish_python = true
+use_goreleaser = true

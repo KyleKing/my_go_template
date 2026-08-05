@@ -54,6 +54,25 @@ description = "Run linter"
 run = "golangci-lint run ./..."
 raw_args = true
 
+{%- if publish_python %}
+
+[tasks."python:build"]
+description = "Build the platform wheel (compiles the c-shared library)"
+run = "uv build --wheel --out-dir dist"
+
+[tasks."python:lint"]
+description = "Lint the Python bindings"
+run = "uv run ruff check bindings/python"
+
+[tasks."python:test"]
+description = "Run the Python binding tests"
+run = "uv run pytest"
+
+[tasks."python:types"]
+description = "Type check the Python bindings"
+run = "uv run ty check"
+{%- endif %}
+
 [tasks.test]
 description = "Run tests with coverage"
 run = "go test -coverprofile=coverage.out ./..."
@@ -86,6 +105,12 @@ ls-lint = "latest"
 "pipx:commitizen" = "latest"
 "pipx:yamllint" = "latest"
 pkl = "latest"
+{%- if publish_python %}
+python = "latest"
+{%- endif %}
 shellcheck = "latest"
 tombi = "latest"
 typos = "latest"
+{%- if publish_python %}
+uv = "latest"
+{%- endif %}

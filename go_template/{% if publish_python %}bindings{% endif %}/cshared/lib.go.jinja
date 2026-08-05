@@ -1,0 +1,77 @@
+// Package main exposes {{ project_name }} as a C shared library.
+//
+// Every exported function recovers from panics because a panic crossing the cgo
+// boundary terminates the host process, which for a Python caller means killing
+// the interpreter rather than raising. For the same reason nothing here may call
+// os.Exit.
+package main
+
+/*
+#include <stdlib.h>
+*/
+import "C"
+
+import (
+	"strings"
+	"unsafe"
+)
+
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+)
+
+// {{ cgo_export_prefix }}Run applies the library to input and returns a malloc'd C string
+// the caller owns. On failure it returns NULL and writes a malloc'd message to
+// errOut. Both pointers must be released with {{ cgo_export_prefix }}Free.
+//
+//export {{ cgo_export_prefix }}Run
+func {{ cgo_export_prefix }}Run(input *C.char, errOut **C.char) (result *C.char) {
+	defer func() {
+		if r := recover(); r != nil {
+			result = nil
+			setError(errOut, panicMessage(r))
+		}
+	}()
+
+	*errOut = nil
+
+	return C.CString(strings.TrimSpace(C.GoString(input)))
+}
+
+// {{ cgo_export_prefix }}Version returns a malloc'd "version commit date" triple for the caller to free.
+//
+//export {{ cgo_export_prefix }}Version
+func {{ cgo_export_prefix }}Version() *C.char {
+	return C.CString(version + " " + commit + " " + date)
+}
+
+// {{ cgo_export_prefix }}Free releases a pointer returned by any other exported function.
+//
+//export {{ cgo_export_prefix }}Free
+func {{ cgo_export_prefix }}Free(p *C.char) {
+	if p != nil {
+		C.free(unsafe.Pointer(p))
+	}
+}
+
+func setError(errOut **C.char, message string) {
+	if errOut != nil {
+		*errOut = C.CString(message)
+	}
+}
+
+func panicMessage(r any) string {
+	if err, ok := r.(error); ok {
+		return err.Error()
+	}
+
+	if s, ok := r.(string); ok {
+		return s
+	}
+
+	return "unknown panic in {{ project_name }}"
+}
+
+func main() {}

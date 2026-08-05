@@ -120,6 +120,16 @@ enable = [
 # Table-driven tests grow long cases and repeat literals without adding real complexity.
 path = "_test\\.go"
 linters = ["cyclop", "goconst"]
+{%- if publish_python %}
+
+[[linters.exclusions.rules]]
+# The cgo shim reports issues no edit can fix. staticcheck and nonamedreturns see
+# the symbols cgo generates rather than the source, gocritic counts the mandatory
+# `import "C"` alongside `unsafe` as a duplicate import, and the named return on
+# each exported function is what lets the deferred recover() replace the result.
+path = "bindings/cshared/"
+linters = ["gocritic", "nlreturn", "nonamedreturns", "staticcheck"]
+{%- endif %}
 
 [linters.settings.cyclop]
 max-complexity = 15

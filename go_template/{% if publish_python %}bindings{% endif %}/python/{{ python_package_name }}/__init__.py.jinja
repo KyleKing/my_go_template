@@ -1,0 +1,5 @@
+"""Python bindings for the {{ project_name }} Go library."""
+
+from ._core import {{ cgo_export_prefix }}Error, __version__, go_version, run
+
+__all__ = ['{{ cgo_export_prefix }}Error', '__version__', 'go_version', 'run']

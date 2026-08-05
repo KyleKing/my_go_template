@@ -16,12 +16,19 @@ jobs:
           - name: default
             project_type: cli
             use_goreleaser: true
+            publish_python: false
           - name: library
             project_type: library
             use_goreleaser: false
+            publish_python: false
           - name: no_goreleaser
             project_type: cli
             use_goreleaser: false
+            publish_python: false
+          - name: python
+            project_type: cli
+            use_goreleaser: true
+            publish_python: true
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -43,6 +50,7 @@ jobs:
             --data module_path=github.com/user_ctt/test-template \
             --data project_type=${{ matrix.project_type }} \
             --data use_goreleaser=${{ matrix.use_goreleaser }} \
+            --data publish_python=${{ matrix.publish_python }} \
             . "$RUNNER_TEMP/generated"
 
       - name: Vet and build generated project

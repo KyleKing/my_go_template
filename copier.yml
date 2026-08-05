@@ -90,9 +90,26 @@ use_goreleaser:
   help: Include goreleaser configuration for releases
   default: true
 
+publish_python:
+  type: bool
+  help: Also ship this Go code as a Python package on PyPI (cgo c-shared library bound with ctypes)
+  default: false
+
 # ====== INTERNAL ======
 hk_version:
   type: str
   help: hk git-hooks framework version pinned in hk.pkl and mise
   default: "1.53.0"
+  when: false
+
+python_package_name:
+  type: str
+  help: Importable Python package name derived from project_name
+  default: "{{ project_name | lower | replace('-', '_') | replace(' ', '_') }}"
+  when: false
+
+cgo_export_prefix:
+  type: str
+  help: Prefix on every symbol the c-shared library exports
+  default: "{{ python_package_name | replace('_', ' ') | title | replace(' ', '') }}"
   when: false

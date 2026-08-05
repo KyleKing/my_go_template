@@ -70,8 +70,24 @@ local linters = new Mapping<String, Step> {
         exclude = List("**/.copier-answers.yml")
     }
     ["pkl"] = Builtins.pkl
-    ["python-debug-statements"] = Builtins.python_debug_statements
-    ["shellcheck"] = (Builtins.shellcheck) {
+{% endraw %}{% if publish_python %}{% raw %}    // Runs the whole suite rather than the changed files: every test calls into
+    // the c-shared library, which uv rebuilds from the Go sources on each run.
+    ["pytest"] {
+        glob = List("bindings/**")
+        check = "uv run pytest"
+    }
+{% endraw %}{% endif %}{% raw %}    ["python-debug-statements"] = Builtins.python_debug_statements
+{% endraw %}{% if publish_python %}{% raw %}    ["ruff"] {
+        glob = List("**/*.py")
+        check = "uv run ruff check {{files}}"
+        fix = "uv run ruff check --fix {{files}}"
+    }
+    ["ruff-format"] {
+        glob = List("**/*.py")
+        check = "uv run ruff format --check {{files}}"
+        fix = "uv run ruff format {{files}}"
+    }
+{% endraw %}{% endif %}{% raw %}    ["shellcheck"] = (Builtins.shellcheck) {
         check = "shellcheck --severity=warning {{files}}"
     }
     // Matches the tombi LSP that formats TOML on save in nvim, so the editor
@@ -109,10 +125,13 @@ local linters = new Mapping<String, Step> {
 // - mdformat and prettier are deliberately absent. tombi and the Go formatters
 //   already own every file they would touch, and running them found nothing to
 //   change in any project.
-// - ruff is deliberately absent. These are Go projects; python-debug-statements
+{% endraw %}{% if publish_python %}{% raw %}// - ruff covers the Python bindings only. python-debug-statements still earns a
+//   separate step because it also guards the copier post-generation script and
+//   any helper scripts outside the ruff `src` roots.
+{% endraw %}{% else %}{% raw %}// - ruff is deliberately absent. These are Go projects; python-debug-statements
 //   is the one Python check worth keeping because a stray breakpoint is cheap to
 //   catch and expensive to ship.
-// - check-toml has no builtin and needs none: tombi-format parses every TOML
+{% endraw %}{% endif %}{% raw %}// - check-toml has no builtin and needs none: tombi-format parses every TOML
 //   file before formatting it, so TOML that fails to parse fails there.
 // - destroyed-symlinks has no hk equivalent, so a symlink committed as a regular
 //   file after a checkout without symlink support goes unnoticed. check-symlinks

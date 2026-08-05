@@ -70,6 +70,12 @@ def cleanup_conditional_files():
         release_workflow.unlink()
         print("Removed release.yml (no goreleaser)")
 
+    for name in ("pyproject.toml", ".github/workflows/publish_python.yml"):
+        path = root / name
+        if path.exists() and not path.read_text().strip():
+            path.unlink()
+            print(f"Removed empty {name}")
+
 
 def cleanup_removed_files():
     """Prune paths the template no longer renders.

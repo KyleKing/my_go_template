@@ -5,8 +5,9 @@ action is pinned identically across the root repo's own workflows and the jinja-
 workflows shipped to generated projects (go_template/.github/workflows/*.jinja); a drifted
 pin is patched in every file where it's found.
 
-Standalone pins (hk, golangci-lint) each live in exactly one file already, so no cross-file
-sync is needed there - just a staleness check against the latest upstream release.
+Standalone pins: `hk` lives only in copier.yml. `golangci-lint` is pinned twice, as a mise
+tool version in go_template/.config/mise/conf.d/template.toml.jinja and as a `version:` for
+golangci-lint-action in go_template/.github/workflows/ci.yml.jinja, and the two must agree.
 """
 
 import logging
@@ -34,13 +35,13 @@ ACTION_FILES = [
     REPO_ROOT / ".github" / "workflows" / "bump_version.yml",
     REPO_ROOT / "go_template" / ".github" / "workflows" / "ci.yml.jinja",
     REPO_ROOT / "go_template" / ".github" / "workflows" / "bump_version.yml.jinja",
-    REPO_ROOT / "go_template" / ".github" / "workflows" / "release.yml.jinja",
 ]
 
 ACTION_PIN_PATTERN = re.compile(r"uses:\s*([\w.\-]+/[\w.\-]+)@([0-9a-f]{40})\s*#\s*v([\w.\-]+)")
 
 COPIER_YML = REPO_ROOT / "copier.yml"
-MISE_HK_TOML = REPO_ROOT / "go_template" / ".config" / "mise.hk.toml.jinja"
+TEMPLATE_TASKS_TOML = REPO_ROOT / "go_template" / ".config" / "mise" / "conf.d" / "template.toml.jinja"
+TEMPLATE_CI_YML = REPO_ROOT / "go_template" / ".github" / "workflows" / "ci.yml.jinja"
 
 
 def check_action_pins() -> list[CheckResult]:
@@ -84,7 +85,7 @@ def check_action_pins() -> list[CheckResult]:
 
 
 def check_standalone_pins() -> list[CheckResult]:
-    """Check the hk and golangci-lint version pins, each sourced from a single file.
+    """Check the hk and golangci-lint version pins against their latest upstream releases.
 
     Returns:
         One CheckResult per pin, in file order.
@@ -100,15 +101,35 @@ def check_standalone_pins() -> list[CheckResult]:
             patch_pin(COPIER_YML, f'default: "{current_hk}"', f'default: "{latest_hk}"')
         results.append(CheckResult("hk", str(COPIER_YML.relative_to(REPO_ROOT)), current_hk, latest_hk, drifted))
 
-    current_lint = extract_pin(MISE_HK_TOML, r'"golangci-lint"\s*=\s*"([^"]+)"')
+    current_lint = extract_pin(TEMPLATE_TASKS_TOML, r'"golangci-lint"\s*=\s*"([^"]+)"')
+    ci_lint = extract_pin(TEMPLATE_CI_YML, r"version:\s*v([\w.\-]+)")
     latest_lint = fetch_github_release("golangci", "golangci-lint")
+    if current_lint and ci_lint and current_lint != ci_lint:
+        results.append(
+            CheckResult(
+                "golangci-lint",
+                str(TEMPLATE_CI_YML.relative_to(REPO_ROOT)),
+                ci_lint,
+                current_lint,
+                drifted=True,
+                note="the ci.yml action pin disagrees with the mise tool pin; set both to the same version",
+            )
+        )
     if current_lint and latest_lint:
         drifted = is_outdated(current_lint, latest_lint)
         if drifted:
-            patch_pin(MISE_HK_TOML, f'"golangci-lint" = "{current_lint}"', f'"golangci-lint" = "{latest_lint}"')
+            patch_pin(
+                TEMPLATE_TASKS_TOML, f'"golangci-lint" = "{current_lint}"', f'"golangci-lint" = "{latest_lint}"'
+            )
+            patch_pin(TEMPLATE_CI_YML, f"version: v{current_lint}", f"version: v{latest_lint}")
         results.append(
             CheckResult(
-                "golangci-lint", str(MISE_HK_TOML.relative_to(REPO_ROOT)), current_lint, latest_lint, drifted
+                "golangci-lint",
+                str(TEMPLATE_TASKS_TOML.relative_to(REPO_ROOT)),
+                current_lint,
+                latest_lint,
+                drifted,
+                note=f"also pinned as `version: v{latest_lint}` in {TEMPLATE_CI_YML.relative_to(REPO_ROOT)}",
             )
         )
 

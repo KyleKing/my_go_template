@@ -1,6 +1,14 @@
 [tool.commitizen]
 name = "cz_conventional_commits"
 version = "0.0.0"
+{%- if publish_python %}
+version_files = [
+  ".cz.toml:^version",
+  "bindings/python/{{ python_package_name }}/_core.py:^__version__",
+  "pyproject.toml:^version",
+]
+{%- else %}
 version_files = [".cz.toml:^version"]
+{%- endif %}
 tag_format = "v$version"
 update_changelog_on_bump = true

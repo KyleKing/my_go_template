@@ -1,0 +1,49 @@
+"""Command line entry point mirroring the {{ project_name }} Go binary."""
+
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+from ._core import {{ cgo_export_prefix }}Error, __version__, run
+
+
+def _parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog='{{ project_name }}', description='{{ project_description }}')
+    parser.add_argument('files', nargs='*', help='files to process (reads stdin when omitted)')
+    parser.add_argument('-V', '--version', action='version', version=f'{{ project_name }} {__version__}')
+    parser.add_argument('-o', '--output', help='write output to this file')
+    return parser
+
+
+def _validate(args: argparse.Namespace, parser: argparse.ArgumentParser) -> None:
+    if args.output and len(args.files) > 1:
+        parser.error('-o can only be used with a single input file')
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = _parser()
+    args = parser.parse_args(argv)
+    _validate(args, parser)
+
+    read = [(Path(name), Path(name).read_text(encoding='utf-8')) for name in args.files]
+    sources = read or [(None, sys.stdin.read())]
+
+    for path, source in sources:
+        try:
+            output = run(source)
+        except {{ cgo_export_prefix }}Error as exc:
+            print(f'{path or "<stdin>"}: {exc}', file=sys.stderr)
+            return 1
+
+        if args.output:
+            Path(args.output).write_text(output, encoding='utf-8')
+        else:
+            sys.stdout.write(output)
+
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())
