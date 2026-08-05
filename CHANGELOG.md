@@ -1,3 +1,9 @@
+## v0.11.3 (2026-08-05)
+
+### Fix
+
+- use portable arithmetic in the PyPI wait loop for Git Bash
+
 ## v0.11.2 (2026-08-05)
 
 ### Fix
