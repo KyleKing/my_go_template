@@ -18,6 +18,23 @@ A boolean would also branch two files (`.goreleaser.yml.jinja` and
 The recipe is in the README under "Releasing a project that needs cgo", worked
 from `gh-star-search` commits `f64b1c1` and `20a2597`.
 
+## `_skip_if_exists` stays reserved for files the template stops maintaining
+
+Scaffolding a project then implements conflicts on every `copier update`, because
+the template keeps rendering its starting version. The `bindings/` cgo shim showed
+this the first time `publish_python` reached a real project: djot-fmt's hand-written
+binding was replaced by the generic stub and its content landed in `.rej` files.
+
+Adding those paths to `_skip_if_exists` would stop the conflict, and it would also
+stop every later template fix from reaching them, without ever reporting that it
+had. A conflict is visible and usually a few lines to re-apply, so the template
+takes the loud failure over the quiet one. `_skip_if_exists` holds only files the
+template has nothing further to say about after the first render: `README.md`,
+`DESIGN.md`, `go.mod`, `.config/mise.toml`, and `cmd/{{ project_name }}/main.go`.
+
+The resolution procedure lives in `go_template/AGENTS.md.jinja` so it reaches every
+generated project.
+
 ## Decisions recorded next to their code
 
 - The two-GOROOT failure from pairing `actions/setup-go` with `jdx/mise-action`
