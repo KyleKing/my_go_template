@@ -3,15 +3,10 @@
 # so one wheel per platform covers every supported Python version.
 name: Publish
 
-# Called by bump_version.yml instead of triggering on the tag, because tags pushed
-# with GITHUB_TOKEN do not start new workflow runs. A called workflow runs inside
-# the caller's run, so it needs no trigger of its own.
+# Must stay a top-level workflow. PyPI trusted publishing checks the attestation's
+# build config URI against the run's top-level workflow_ref, and those disagree
+# whenever this is called as a reusable workflow from another one.
 "on":
-  workflow_call:
-    inputs:
-      tag:
-        required: true
-        type: string
   workflow_dispatch:
     inputs:
       tag:
@@ -39,30 +34,12 @@ jobs:
         with:
           go-version-file: go.mod
 
-      # Only a run called from bump_version.yml has a commitizen changelog to
-      # download. A manual run falls back to the notes goreleaser derives from
-      # the commit range, which is never empty.
-      - name: Download the release notes
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
-        continue-on-error: true
-        with:
-          name: release-notes
-
-      - name: Select the release notes source
-        id: notes
-        run: |
-          if [ -s body.md ]; then
-            echo "args=release --clean --release-notes body.md" >> "$GITHUB_OUTPUT"
-          else
-            echo "args=release --clean" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Build release binaries and publish release
         uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7.2.3
         with:
           distribution: goreleaser
           version: "~> v2"
-          args: ${{ steps.notes.outputs.args }}
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Deploy key for the Homebrew tap push. Unset until
@@ -224,13 +201,18 @@ jobs:
           printf 'hello' > expected.txt
           diff -u expected.txt actual.txt
 
+      # The tag carries the raw semver string while Python normalizes the
+      # distribution version, so `0.1.0-rc.2` and `0.1.0rc2` name one release.
+      # canonicalize_version puts both forms in the same shape before comparing.
       - name: Import the library and check the stamped version
         run: |
-          uv run --refresh --no-project --with "${PACKAGE_NAME}==${VERSION}" python -c "
+          uv run --refresh --no-project --with "${PACKAGE_NAME}==${VERSION}" --with packaging python -c "
           import test_template
+          from packaging.utils import canonicalize_version
 
+          expected = canonicalize_version('${VERSION}')
           assert test_template.run('  hello  ') == 'hello', test_template.run('  hello  ')
-          assert test_template.__version__ == '${VERSION}', test_template.__version__
-          assert test_template.go_version().split()[0] == '${VERSION}', test_template.go_version()
+          assert canonicalize_version(test_template.__version__) == expected, test_template.__version__
+          assert canonicalize_version(test_template.go_version().split()[0]) == expected, test_template.go_version()
           print('ok', test_template.go_version())
           "

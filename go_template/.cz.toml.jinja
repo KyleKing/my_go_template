@@ -11,4 +11,6 @@ version_files = [
 version_files = [".cz.toml:^version"]
 {%- endif %}
 tag_format = "v$version"
+# goreleaser and the Go module proxy both reject a pep440 prerelease such as 0.1.0rc2
+version_scheme = "semver"
 update_changelog_on_bump = true
