@@ -1,3 +1,9 @@
+## v0.11.1 (2026-08-05)
+
+### Fix
+
+- dispatch publish.yml so PyPI attestations validate, and tag with semver
+
 ## v0.11.0 (2026-08-05)
 
 ### Feat
