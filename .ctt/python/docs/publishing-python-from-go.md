@@ -50,6 +50,16 @@ platform, and a new one every October.
 blocked in Go code run in parallel, so a `ThreadPoolExecutor` over this API gets
 real concurrency rather than interleaving.
 
+That parallelism is only safe if the Go code underneath is goroutine-safe, and
+plenty of libraries are not. A package-level map written during parsing is the
+common shape, and two Python threads reaching it at once abort the whole process
+with `fatal error: concurrent map writes`, which no `recover()` can catch. Check
+the library before advertising concurrency: run its parse or transform entry
+point under `go test -race` from several goroutines. When it is not safe, hold a
+`sync.Mutex` across the call in the shim and say so in the Python docstring.
+Serializing costs throughput, and a crashed interpreter costs the process.
+`djot-fmt` binds `godjot` this way for exactly this reason.
+
 ## Safety rules at the boundary
 
 Break any of these and the failure mode is a killed interpreter or a slow leak,
