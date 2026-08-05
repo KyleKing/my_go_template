@@ -1,3 +1,9 @@
+## v0.11.2 (2026-08-05)
+
+### Fix
+
+- probe PyPI availability with a command uv actually has
+
 ## v0.11.1 (2026-08-05)
 
 ### Fix
