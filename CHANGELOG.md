@@ -1,3 +1,9 @@
+## v0.10.2 (2026-08-05)
+
+### Fix
+
+- publish Go binaries and the Python package from one called workflow
+
 ## v0.10.1 (2026-08-05)
 
 ### Fix
