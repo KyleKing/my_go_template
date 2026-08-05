@@ -1,3 +1,10 @@
+## v0.10.0 (2026-08-05)
+
+### Feat
+
+- add an optional publish_python flag for shipping Go code to PyPI
+- template-owned AGENTS.md with AGENTS.local.md for project guidance
+
 ## v0.9.2 (2026-08-01)
 
 ### Fix
