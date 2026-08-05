@@ -1,3 +1,9 @@
+## v0.11.0 (2026-08-05)
+
+### Feat
+
+- allow bump_version to cut a prerelease on manual dispatch
+
 ## v0.10.2 (2026-08-05)
 
 ### Fix
