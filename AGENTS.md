@@ -69,6 +69,10 @@ template that works:
 cd .ctt/<variant> && mise run ci && golangci-lint run ./... && actionlint .github/workflows/*.yml
 ```
 
+`actionlint` owns GitHub workflow YAML and yamllint covers every other YAML file, so
+the generated `hk.pkl` excludes `.github/workflows/` from yamllint. A workflow change
+is verified by `actionlint`, in every render that the flags produce.
+
 Delete any `dist/`, `.venv/`, or lockfile you create inside `.ctt/` before committing.
 
 ## Releasing

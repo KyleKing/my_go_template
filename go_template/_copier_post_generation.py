@@ -70,7 +70,7 @@ def cleanup_conditional_files():
         release_workflow.unlink()
         print("Removed release.yml (no goreleaser)")
 
-    for name in ("pyproject.toml", ".github/workflows/publish_python.yml"):
+    for name in ("pyproject.toml", ".github/workflows/publish.yml"):
         path = root / name
         if path.exists() and not path.read_text().strip():
             path.unlink()
