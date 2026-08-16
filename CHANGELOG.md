@@ -1,3 +1,9 @@
+## v0.11.4 (2026-08-16)
+
+### Fix
+
+- define every tool version once in copier.yml
+
 ## v0.11.3 (2026-08-05)
 
 ### Fix
