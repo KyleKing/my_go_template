@@ -96,10 +96,99 @@ publish_python:
   default: false
 
 # ====== INTERNAL ======
+# Every tool version is defined once here and substituted wherever it is needed,
+# so a pin can never disagree between mise and a workflow. Unpinned tools drift
+# between a laptop and a CI runner, and a formatter that drifts fails only in CI.
+# PLANNED: hand these pins to doner (../doner) once it reads mise TOML as well as
+# Dockerfiles, so they update on its schedule instead of by hand.
+actionlint_version:
+  type: str
+  help: actionlint version pinned in mise
+  default: "1.7.12"
+  when: false
+
+commitizen_version:
+  type: str
+  help: commitizen version pinned in mise
+  default: "4.17.0"
+  when: false
+
+go_version:
+  type: str
+  help: Go toolchain version pinned in mise
+  default: "1.26.6"
+  when: false
+
+golangci_lint_version:
+  type: str
+  help: golangci-lint version pinned in mise and the CI lint job
+  default: "2.12.2"
+  when: false
+
+golines_version:
+  type: str
+  help: golines version pinned in mise
+  default: "0.15.0"
+  when: false
+
 hk_version:
   type: str
   help: hk git-hooks framework version pinned in hk.pkl and mise
   default: "1.53.0"
+  when: false
+
+jq_version:
+  type: str
+  help: jq version pinned in mise
+  default: "1.8.2"
+  when: false
+
+ls_lint_version:
+  type: str
+  help: ls-lint version pinned in mise
+  default: "2.3.1"
+  when: false
+
+pkl_version:
+  type: str
+  help: pkl version pinned in mise
+  default: "0.32.1"
+  when: false
+
+python_version:
+  type: str
+  help: Python version pinned in mise
+  default: "3.14.7"
+  when: false
+
+shellcheck_version:
+  type: str
+  help: shellcheck version pinned in mise
+  default: "0.11.0"
+  when: false
+
+tombi_version:
+  type: str
+  help: tombi version pinned in mise
+  default: "1.4.0"
+  when: false
+
+typos_version:
+  type: str
+  help: typos version pinned in mise
+  default: "1.49.0"
+  when: false
+
+uv_version:
+  type: str
+  help: uv version pinned in mise
+  default: "0.12.5"
+  when: false
+
+yamllint_version:
+  type: str
+  help: yamllint version pinned in mise
+  default: "1.38.0"
   when: false
 
 python_package_name:

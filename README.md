@@ -86,7 +86,10 @@ lands. `gh-star-search` is the worked example (commits `f64b1c1` and `20a2597`):
 - set `CGO_ENABLED=1` and cut the goreleaser build down to the targets one runner
   can build natively, because a cgo build cannot cross-compile
 - move the release job to `macos-latest` so goreleaser builds the darwin pair and
-  publishes both the release and the Homebrew cask
+  publishes both the release and the Homebrew cask. commitizen-action is a Docker
+  action and runs on Linux only, so the bump and the release have to be separate
+  jobs, and the release job checks out `needs.bump-version.outputs.tag` rather
+  than `version`, which is bare and does not name a ref
 - build each remaining platform in its own `bump_version.yml` job, upload it as an
   artifact, and attach it to the release afterwards with `gh release upload`,
   appending its digest to `checksums.txt`
