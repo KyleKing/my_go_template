@@ -5,7 +5,7 @@ action is pinned identically across the root repo's own workflows and the jinja-
 workflows shipped to generated projects (go_template/.github/workflows/*.jinja); a drifted
 pin is patched in every file where it's found.
 
-Standalone pins: `hk` lives only in copier.yml. `golangci-lint` is pinned twice, as a mise
+Standalone pins: `hk` is report-only, since its version repeats five times. `golangci-lint` is pinned twice, as a mise
 tool version in go_template/.config/mise/conf.d/template.toml.jinja and as a `version:` for
 golangci-lint-action in go_template/.github/workflows/ci.yml.jinja, and the two must agree.
 """
@@ -39,7 +39,7 @@ ACTION_FILES = [
 
 ACTION_PIN_PATTERN = re.compile(r"uses:\s*([\w.\-]+/[\w.\-]+)@([0-9a-f]{40})\s*#\s*v([\w.\-]+)")
 
-COPIER_YML = REPO_ROOT / "copier.yml"
+TEMPLATE_HK_PKL = REPO_ROOT / "go_template" / "hk.pkl.jinja"
 TEMPLATE_TASKS_TOML = REPO_ROOT / "go_template" / ".config" / "mise" / "conf.d" / "template.toml.jinja"
 TEMPLATE_CI_YML = REPO_ROOT / "go_template" / ".github" / "workflows" / "ci.yml.jinja"
 
@@ -93,13 +93,20 @@ def check_standalone_pins() -> list[CheckResult]:
     """
     results = []
 
-    current_hk = extract_pin(COPIER_YML, r'hk_version:\s*\n\s*type: str\s*\n\s*help:.*\n\s*default: "([^"]+)"')
+    current_hk = extract_pin(TEMPLATE_HK_PKL, r'min_hk_version = "([^"]+)"')
     latest_hk = fetch_github_release("jdx", "hk")
     if current_hk and latest_hk:
-        drifted = is_outdated(current_hk, latest_hk)
-        if drifted:
-            patch_pin(COPIER_YML, f'default: "{current_hk}"', f'default: "{latest_hk}"')
-        results.append(CheckResult("hk", str(COPIER_YML.relative_to(REPO_ROOT)), current_hk, latest_hk, drifted))
+        results.append(
+            CheckResult(
+                "hk",
+                str(TEMPLATE_HK_PKL.relative_to(REPO_ROOT)),
+                current_hk,
+                latest_hk,
+                is_outdated(current_hk, latest_hk),
+                note="report-only: the version repeats five times across hk.pkl.jinja and the mise pins, "
+                "which patch_pin cannot rewrite together; doneram patches all five from .doneram.yml",
+            )
+        )
 
     current_lint = extract_pin(TEMPLATE_TASKS_TOML, r'"golangci-lint"\s*=\s*"([^"]+)"')
     ci_lint = extract_pin(TEMPLATE_CI_YML, r"version:\s*v([\w.\-]+)")

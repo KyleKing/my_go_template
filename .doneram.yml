@@ -1,0 +1,96 @@
+---
+# Tool versions shipped to generated projects. Each one is a literal in the
+# file that consumes it. This file records where those literals are and how to
+# resolve the latest value. go and python are absent on purpose, because they
+# set the language level a generated project targets and stay copier answers.
+#
+# A site that matches a different number of times than `expect` is an error, not
+# a warning. A pattern that silently stops matching is how a pin goes stale
+# without anyone noticing.
+
+after_patch: ./sync_with_ctt.sh
+
+defaults:
+  resolver: mise
+  expect: 1
+
+tools:
+  actionlint:
+    sites:
+      - file: go_template/.config/mise/conf.d/template.toml.jinja
+        pattern: 'actionlint = "([\d.]+)"'
+
+  commitizen:
+    mise_tool: "pipx:commitizen"
+    sites:
+      - file: go_template/.config/mise/conf.d/template.toml.jinja
+        pattern: '"pipx:commitizen" = "([\d.]+)"'
+
+  golangci-lint:
+    sites:
+      - file: go_template/.config/mise/conf.d/template.toml.jinja
+        pattern: '"golangci-lint" = "([\d.]+)"'
+      - file: go_template/.github/workflows/ci.yml.jinja
+        pattern: 'version: v([\d.]+)'
+
+  golines:
+    mise_tool: "go:github.com/golangci/golines"
+    sites:
+      - file: go_template/.config/mise/conf.d/template.toml.jinja
+        pattern: '"go:github.com/golangci/golines" = "([\d.]+)"'
+
+  hk:
+    sites:
+      - file: go_template/.config/mise/conf.d/template.toml.jinja
+        pattern: 'hk = "([\d.]+)"'
+      # amends and import each carry the version twice, and pkl cannot
+      # interpolate a local into either, so all four literals move together.
+      - file: go_template/hk.pkl.jinja
+        pattern: 'download/v([\d.]+)/hk@'
+        expect: 2
+      - file: go_template/hk.pkl.jinja
+        pattern: 'hk@([\d.]+)#'
+        expect: 2
+      - file: go_template/hk.pkl.jinja
+        pattern: 'min_hk_version = "([\d.]+)"'
+
+  jq:
+    sites:
+      - file: go_template/.config/mise/conf.d/template.toml.jinja
+        pattern: 'jq = "([\d.]+)"'
+
+  ls-lint:
+    sites:
+      - file: go_template/.config/mise/conf.d/template.toml.jinja
+        pattern: 'ls-lint = "([\d.]+)"'
+
+  pkl:
+    sites:
+      - file: go_template/.config/mise/conf.d/template.toml.jinja
+        pattern: 'pkl = "([\d.]+)"'
+
+  shellcheck:
+    sites:
+      - file: go_template/.config/mise/conf.d/template.toml.jinja
+        pattern: 'shellcheck = "([\d.]+)"'
+
+  tombi:
+    sites:
+      - file: go_template/.config/mise/conf.d/template.toml.jinja
+        pattern: 'tombi = "([\d.]+)"'
+
+  typos:
+    sites:
+      - file: go_template/.config/mise/conf.d/template.toml.jinja
+        pattern: 'typos = "([\d.]+)"'
+
+  uv:
+    sites:
+      - file: go_template/.config/mise/conf.d/template.toml.jinja
+        pattern: 'uv = "([\d.]+)"'
+
+  yamllint:
+    mise_tool: "pipx:yamllint"
+    sites:
+      - file: go_template/.config/mise/conf.d/template.toml.jinja
+        pattern: '"pipx:yamllint" = "([\d.]+)"'

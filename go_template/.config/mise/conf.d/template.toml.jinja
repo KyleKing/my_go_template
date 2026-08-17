@@ -94,29 +94,26 @@ fi
 description = "View coverage report in browser"
 run = "go tool cover -html=coverage.out"
 
-# Every version here comes from copier.yml, which is the one place they are
-# defined, so mise and the workflows can never disagree. "latest" is deliberately
-# absent: a formatter or linter that resolves differently on a laptop than on a
-# runner fails only in CI, which is the worst place to find out.
-# PLANNED: hand these pins to doner (../doner) once it reads mise TOML as well as
-# Dockerfiles, so they update on its schedule instead of by hand.
+# Every literal here is listed in .doneram.yml and updated by doneram. "latest"
+# is deliberately absent: a formatter or linter that resolves differently on a
+# laptop than on a runner fails only in CI, which is the worst place to find out.
 [tools]
-actionlint = "{{ actionlint_version }}"
+actionlint = "1.7.12"
 go = "{{ go_version }}"
-"go:github.com/golangci/golines" = "{{ golines_version }}"
-"golangci-lint" = "{{ golangci_lint_version }}"
-hk = "{{ hk_version }}"
-jq = "{{ jq_version }}"
-ls-lint = "{{ ls_lint_version }}"
-"pipx:commitizen" = "{{ commitizen_version }}"
-"pipx:yamllint" = "{{ yamllint_version }}"
-pkl = "{{ pkl_version }}"
+"go:github.com/golangci/golines" = "0.15.0"
+"golangci-lint" = "2.12.2"
+hk = "1.53.0"
+jq = "1.8.2"
+ls-lint = "2.3.1"
+"pipx:commitizen" = "4.17.0"
+"pipx:yamllint" = "1.38.0"
+pkl = "0.32.1"
 {%- if publish_python %}
 python = "{{ python_version }}"
 {%- endif %}
-shellcheck = "{{ shellcheck_version }}"
-tombi = "{{ tombi_version }}"
-typos = "{{ typos_version }}"
+shellcheck = "0.11.0"
+tombi = "1.4.0"
+typos = "1.49.0"
 {%- if publish_python %}
-uv = "{{ uv_version }}"
+uv = "0.12.5"
 {%- endif %}
