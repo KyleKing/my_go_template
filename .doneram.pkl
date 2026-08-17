@@ -1,0 +1,126 @@
+// Tool versions shipped to generated projects. Each one is a literal in the file
+// that consumes it. This file records where those literals are and how to resolve
+// the latest value. go and python are absent on purpose, because they set the
+// language level a generated project targets and stay copier answers.
+//
+// A site that matches a different number of times than `expect` fails the run.
+// A pattern that silently stops matching is how a pin goes stale unnoticed.
+//
+// The schema is inlined so this file evaluates today. It amends doneram's
+// published Config.pkl once doneram ships a pkl package.
+
+class Site {
+  /// Repo-relative path to the file holding the literal.
+  file: String
+  /// Regex with exactly one capture group around the version.
+  pattern: String
+  expect: Int(this > 0) = 1
+}
+
+/// Keeps taking updates below `max`, so a known break blocks only the majors
+/// past it rather than freezing the pin.
+class Hold {
+  reason: String
+  max: String?
+}
+
+class Tool {
+  resolver: String = "mise"
+  /// Name to query when it differs from the map key, e.g. "pipx:commitizen".
+  resolverName: String?
+  sites: Listing<Site>
+  hold: Hold?
+}
+
+/// Brings the rendered .ctt output back in sync after any patch.
+afterPatch: String = "./sync_with_ctt.sh"
+
+local miseToml = "go_template/.config/mise/conf.d/template.toml.jinja"
+local hkPkl = "go_template/hk.pkl.jinja"
+local ciYml = "go_template/.github/workflows/ci.yml.jinja"
+
+/// A bare mise tool key, e.g. `actionlint = "1.7.12"`.
+local function misePin(key: String): Site = new {
+  file = miseToml
+  pattern = #"\#(key) = "([\d.]+)""#
+}
+
+/// A quoted mise tool key, e.g. `"golangci-lint" = "2.12.2"`.
+local function quotedMisePin(key: String): Site = new {
+  file = miseToml
+  pattern = #""\#(key)" = "([\d.]+)""#
+}
+
+tools: Mapping<String, Tool> = new {
+  ["actionlint"] = new {
+    sites = new { misePin("actionlint") }
+  }
+  ["commitizen"] = new {
+    resolverName = "pipx:commitizen"
+    sites = new { quotedMisePin("pipx:commitizen") }
+  }
+  ["golangci-lint"] = new {
+    sites = new {
+      quotedMisePin("golangci-lint")
+      new Site {
+        file = ciYml
+        pattern = #"version: v([\d.]+)"#
+      }
+    }
+  }
+  ["golines"] = new {
+    resolverName = "go:github.com/golangci/golines"
+    sites = new {
+      new Site {
+        file = miseToml
+        pattern = #""go:github\.com/golangci/golines" = "([\d.]+)""#
+      }
+    }
+  }
+  ["hk"] = new {
+    sites = new {
+      misePin("hk")
+      // amends and import each carry the version twice, and pkl cannot
+      // interpolate a local into either, so all four literals move together.
+      new Site {
+        file = hkPkl
+        pattern = #"download/v([\d.]+)/hk@"#
+        expect = 2
+      }
+      new Site {
+        file = hkPkl
+        pattern = #"hk@([\d.]+)#"#
+        expect = 2
+      }
+      new Site {
+        file = hkPkl
+        pattern = #"min_hk_version = "([\d.]+)""#
+      }
+    }
+  }
+  ["jq"] = new {
+    sites = new { misePin("jq") }
+  }
+  ["ls-lint"] = new {
+    sites = new { misePin("ls-lint") }
+  }
+  ["pkl"] = new {
+    sites = new { misePin("pkl") }
+  }
+  ["shellcheck"] = new {
+    sites = new { misePin("shellcheck") }
+  }
+  ["tombi"] = new {
+    sites = new { misePin("tombi") }
+  }
+  ["typos"] = new {
+    sites = new { misePin("typos") }
+  }
+  ["uv"] = new {
+    sites = new { misePin("uv") }
+  }
+  ["yamllint"] = new {
+    resolverName = "pipx:yamllint"
+    sites = new { quotedMisePin("pipx:yamllint") }
+  }
+}
