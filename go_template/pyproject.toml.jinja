@@ -1,9 +1,11 @@
-{% if publish_python %}[build-system]
-build-backend = "hatchling.build"
-requires = ["hatchling>=1.27"]
-
-[project]
-authors = [{email = "{{ author_email }}", name = "{{ author_name }}"}]
+{% if publish_python %}[project]
+name = "{{ project_name }}"
+version = "0.0.0"
+description = "{{ project_description }}"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "{{ author_name }}", email = "{{ author_email }}" }]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "License :: OSI Approved :: MIT License",
@@ -13,26 +15,24 @@ classifiers = [
   "Programming Language :: Go",
   "Programming Language :: Python :: 3",
 ]
-description = "{{ project_description }}"
-license = "MIT"
-name = "{{ project_name }}"
-readme = "README.md"
-requires-python = ">=3.10"
-version = "0.0.0"
-
-[project.scripts]
-{{ project_name }} = "{{ python_package_name }}._cli:main"
 
 [project.urls]
 Repository = "{{ repository_provider }}/{{ repository_namespace }}/{{ project_name }}"
 
+[project.scripts]
+{{ project_name }} = "{{ python_package_name }}._cli:main"
+
 [dependency-groups]
 dev = [
-  "hatchling>=1.27", # the build hook is type-checked alongside the package
+  "hatchling>=1.27",  # the build hook is type-checked alongside the package
   "pytest>=8",
   "ruff>=0.9",
   "ty>=0.0.1a1",
 ]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
 
 [tool.hatch.build.hooks.custom]
 path = "bindings/python/hatch_build.py"
@@ -64,16 +64,16 @@ quote-style = "single"
 
 [tool.ruff.lint]
 ignore = [
-  "missing-trailing-comma", # conflicts with the formatter
-  "missing-copyright-notice", # this repo carries its license in LICENSE, not in file headers
-  "incorrect-blank-line-before-class", # incompatible with D211
-  "multi-line-summary-second-line", # incompatible with D212
-  "raw-string-in-exception", # a literal message reads better than a name used once
-  "print", # the CLI prints on purpose
-  "raise-vanilla-args", # these exceptions carry their context in the message
-  "docstring-missing-returns", # one-line docstrings say it already
-  "docstring-missing-exception", # one-line docstrings say it already
-  "suspicious-subprocess-import", # the build hook has to shell out to the Go toolchain
+  "missing-trailing-comma",  # conflicts with the formatter
+  "missing-copyright-notice",  # this repo carries its license in LICENSE, not in file headers
+  "incorrect-blank-line-before-class",  # incompatible with D211
+  "multi-line-summary-second-line",  # incompatible with D212
+  "raw-string-in-exception",  # a literal message reads better than a name used once
+  "print",  # the CLI prints on purpose
+  "raise-vanilla-args",  # these exceptions carry their context in the message
+  "docstring-missing-returns",  # one-line docstrings say it already
+  "docstring-missing-exception",  # one-line docstrings say it already
+  "suspicious-subprocess-import",  # the build hook has to shell out to the Go toolchain
 ]
 preview = true
 select = ["ALL"]
