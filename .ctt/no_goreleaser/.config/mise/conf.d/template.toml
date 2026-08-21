@@ -10,7 +10,7 @@ run = "go build -v -o test-template ./cmd/test-template"
 description = "Run all checks (used in GitHub Actions)"
 run = [
   "go test -v -coverprofile=coverage.out ./...",
-  "go build -v -o test-template ./cmd/test-template"
+  "go build -v -o test-template ./cmd/test-template",
 ]
 
 [tasks."verify-released"]
