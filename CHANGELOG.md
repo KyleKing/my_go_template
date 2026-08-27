@@ -1,3 +1,21 @@
+## v0.12.0 (2026-08-27)
+
+### Feat
+
+- **ci**: run a project's own ci:project task so a local gate needs no workflow edit
+- guard pushes against an unpublished sibling module
+
+### Fix
+
+- **lint**: stop gocritic demanding the named returns nonamedreturns forbids
+- order pyproject.toml the way tombi's schema does
+- give TOML arrays the trailing comma tombi needs
+
+### Refactor
+
+- express the doneram pin config in pkl
+- hand tool version pins to doneram
+
 ## v0.11.4 (2026-08-16)
 
 ### Fix
