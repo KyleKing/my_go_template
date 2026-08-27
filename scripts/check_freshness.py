@@ -104,7 +104,7 @@ def check_standalone_pins() -> list[CheckResult]:
                 latest_hk,
                 is_outdated(current_hk, latest_hk),
                 note="report-only: the version repeats five times across hk.pkl.jinja and the mise pins, "
-                "which patch_pin cannot rewrite together; doneram patches all five from .doneram.yml",
+                "which patch_pin cannot rewrite together; doneram patches all five from .doneram.pkl",
             )
         )
 

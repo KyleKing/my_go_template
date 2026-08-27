@@ -99,7 +99,7 @@ publish_python:
 # Only the two language versions are answers, because they set the level a
 # generated project compiles and runs against and are a real per-project choice.
 # Every other tool version is a literal in the file that consumes it, listed in
-# .doneram.yml, and updated to latest by doneram rather than by hand.
+# .doneram.pkl, and updated to latest by doneram rather than by hand.
 go_version:
   type: str
   help: Go toolchain version pinned in mise
