@@ -39,8 +39,8 @@ generated project.
 
 - The two-GOROOT failure from pairing `actions/setup-go` with `jdx/mise-action`
   in one job: `go_template/.github/workflows/ci.yml.jinja`
-- Why the render ships no TOML formatter of its own beyond hk's `tombi-format`:
-  `.pre-commit-config.yaml`
+- Why `tombi-format` is the render's only TOML formatter, and what else hk does
+  not cover: `go_template/hk.pkl.jinja`
 - Why the Homebrew cask publishes unconditionally rather than behind a
   `use_homebrew_tap` question: `go_template/.goreleaser.yml.jinja`
 - Why Go filenames stay `snake_case`: `go_template/.ls-lint.yml`
