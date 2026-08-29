@@ -6,14 +6,15 @@ removed rather than marked done. Settled design choices live in
 [docs/DECISIONS.md](docs/DECISIONS.md), and the per-change history lives in the
 git log.
 
-Template is at v0.12.0. Every child (`aragonite`, `djot-fmt`, `gh-lazydispatch`,
+Template is at v0.12.1. Every child (`aragonite`, `djot-fmt`, `gh-lazydispatch`,
 `gh-repo-dashboard`, `gh-star-search`, `gh-sweep`, `jj-diff`) is pinned at
-v0.12.0, so the template and its renders are in sync.
+v0.12.0, so one `copier update` per child picks up the concurrency guard on Bump
+Version and the `.pre-commit-config.yaml` removal.
 
 ## Template repo
 
 - The render no longer ships `.pre-commit-config.yaml`; `hk` owns the hooks and
-  CI runs `hk check --all`. Children generated before v0.13.0 still have the
+  CI runs `hk check --all`. Children generated before v0.12.1 still have the
   file on disk, because `copier update` adds and patches files but never
   deletes them. Remove it by hand in each child
 - Nothing formats TOML in this repo (this repo has no `hk.pkl` of its own), so
