@@ -1,3 +1,13 @@
+## v0.12.1 (2026-08-29)
+
+### Fix
+
+- **ci**: serialize Bump Version so duplicate runs cannot race on the tag
+
+### Refactor
+
+- **template**: drop the render's pre-commit config now that hk owns the hooks
+
 ## v0.12.0 (2026-08-27)
 
 ### Feat
