@@ -58,6 +58,17 @@ local linters = new Mapping<String, Step> {
             fi
             """
     }
+    // The one Go step at commit time. `golangci-lint fmt` runs the formatters
+    // .golangci.toml configures and typechecks nothing, so a cold build cache
+    // costs it nothing. `golangci-lint run` is deliberately absent: it
+    // typechecks, which is seconds on a cold cache, and pre-push and CI
+    // already run it.
+    ["go-format"] {
+        batch = true
+        glob = List("**/*.go")
+        check = "golangci-lint fmt --diff {{files}}"
+        fix = "golangci-lint fmt {{files}}"
+    }
     ["ls-lint"] {
         check = "ls-lint"
     }
