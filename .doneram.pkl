@@ -41,6 +41,8 @@ local ciYml = "go_template/.github/workflows/ci.yml.jinja"
 local rootCiYml = ".github/workflows/ci.yml"
 local rootBumpYml = ".github/workflows/bump_version.yml"
 local bumpYml = "go_template/.github/workflows/bump_version.yml.jinja"
+local publishYml = "go_template/.github/workflows/publish.yml.jinja"
+local freshnessYml = ".github/workflows/freshness.yml"
 
 /// A bare mise tool key, e.g. `actionlint = "1.7.12"`.
 local function misePin(key: String): Site = new {
@@ -83,11 +85,23 @@ tools: Mapping<String, Tool> = new {
       actionPin("actions/checkout", rootBumpYml, 1)
       actionPin("actions/checkout", ciYml, 6)
       actionPin("actions/checkout", bumpYml, 1)
+      actionPin("actions/checkout", publishYml, 3)
+      actionPin("actions/checkout", freshnessYml, 1)
     }
   }
   ["commitizen"] = new {
     resolverName = "pipx:commitizen"
     sites = new { quotedMisePin("pipx:commitizen") }
+  }
+  ["create-pull-request"] = new {
+    resolver = "github-action"
+    resolverName = "peter-evans/create-pull-request"
+    sites = new { actionPin("peter-evans/create-pull-request", freshnessYml, 1) }
+  }
+  ["download-artifact"] = new {
+    resolver = "github-action"
+    resolverName = "actions/download-artifact"
+    sites = new { actionPin("actions/download-artifact", publishYml, 1) }
   }
   ["golangci-lint"] = new {
     sites = new {
@@ -115,7 +129,10 @@ tools: Mapping<String, Tool> = new {
   ["goreleaser-action"] = new {
     resolver = "github-action"
     resolverName = "goreleaser/goreleaser-action"
-    sites = new { actionPin("goreleaser/goreleaser-action", bumpYml, 1) }
+    sites = new {
+      actionPin("goreleaser/goreleaser-action", bumpYml, 1)
+      actionPin("goreleaser/goreleaser-action", publishYml, 1)
+    }
   }
   ["hk"] = new {
     sites = new {
@@ -147,7 +164,10 @@ tools: Mapping<String, Tool> = new {
   ["mise-action"] = new {
     resolver = "github-action"
     resolverName = "jdx/mise-action"
-    sites = new { actionPin("jdx/mise-action", ciYml, 4) }
+    sites = new {
+      actionPin("jdx/mise-action", ciYml, 4)
+      actionPin("jdx/mise-action", freshnessYml, 1)
+    }
   }
   ["pkl"] = new {
     sites = new { misePin("pkl") }
@@ -159,12 +179,18 @@ tools: Mapping<String, Tool> = new {
       actionPin("actions/setup-go", rootCiYml, 1)
       actionPin("actions/setup-go", ciYml, 3)
       actionPin("actions/setup-go", bumpYml, 1)
+      actionPin("actions/setup-go", publishYml, 2)
+      actionPin("actions/setup-go", freshnessYml, 1)
     }
   }
   ["setup-uv"] = new {
     resolver = "github-action"
     resolverName = "astral-sh/setup-uv"
-    sites = new { actionPin("astral-sh/setup-uv", rootCiYml, 1) }
+    sites = new {
+      actionPin("astral-sh/setup-uv", rootCiYml, 1)
+      actionPin("astral-sh/setup-uv", publishYml, 3)
+      actionPin("astral-sh/setup-uv", freshnessYml, 1)
+    }
   }
   ["shellcheck"] = new {
     sites = new { misePin("shellcheck") }
@@ -178,7 +204,10 @@ tools: Mapping<String, Tool> = new {
   ["upload-artifact"] = new {
     resolver = "github-action"
     resolverName = "actions/upload-artifact"
-    sites = new { actionPin("actions/upload-artifact", ciYml, 2) }
+    sites = new {
+      actionPin("actions/upload-artifact", ciYml, 2)
+      actionPin("actions/upload-artifact", publishYml, 2)
+    }
   }
   ["uv"] = new {
     sites = new { misePin("uv") }
