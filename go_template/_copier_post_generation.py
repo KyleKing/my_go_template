@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Post-generation tasks for go_template."""
 
+import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -52,6 +54,38 @@ def validate_answers():
         for error in errors:
             print(f"  - {error}\n")
         sys.exit(1)
+
+
+def restore_version():
+    """Put back the version copier just reset to the 0.0.0 placeholder.
+
+    An unnoticed reset cuts a v0.0.1 on the next release, which cannot be undone
+    once the tag and the module proxy have it.
+    """
+    root = Path(__file__).parent
+    cz = root / ".cz.toml"
+    if not cz.is_file():
+        return
+    content = cz.read_text()
+    if not re.search(r'^version = "0\.0\.0"$', content, re.MULTILINE):
+        return
+    try:
+        previous = subprocess.run(
+            ["git", "show", "HEAD:.cz.toml"],
+            capture_output=True,
+            check=True,
+            cwd=root,
+            text=True,
+        ).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return
+    match = re.search(r'^version = "(.+)"$', previous, re.MULTILINE)
+    if not match or match.group(1) == "0.0.0":
+        return
+    cz.write_text(
+        re.sub(r'^version = "0\.0\.0"$', f'version = "{match.group(1)}"', content, count=1, flags=re.MULTILINE),
+    )
+    print(f"Restored .cz.toml version to {match.group(1)}")
 
 
 def cleanup_conditional_files():
@@ -127,6 +161,7 @@ def delete_myself():
 
 def main():
     validate_answers()
+    restore_version()
     cleanup_conditional_files()
     cleanup_legacy_files()
     cleanup_removed_files()
