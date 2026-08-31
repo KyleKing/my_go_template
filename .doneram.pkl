@@ -38,6 +38,9 @@ afterPatch: String = "./sync_with_ctt.sh"
 local miseToml = "go_template/.config/mise/conf.d/template.toml.jinja"
 local hkPkl = "go_template/hk.pkl.jinja"
 local ciYml = "go_template/.github/workflows/ci.yml.jinja"
+local rootCiYml = ".github/workflows/ci.yml"
+local rootBumpYml = ".github/workflows/bump_version.yml"
+local bumpYml = "go_template/.github/workflows/bump_version.yml.jinja"
 
 /// A bare mise tool key, e.g. `actionlint = "1.7.12"`.
 local function misePin(key: String): Site = new {
@@ -51,9 +54,36 @@ local function quotedMisePin(key: String): Site = new {
   pattern = #""\#(key)" = "([\d.]+)""#
 }
 
+/// A `uses: owner/repo@<sha> # <tag>` GitHub Action pin, one capture group
+/// spanning the sha and the tag together, since github-action patches both
+/// as a single resolved value.
+local function actionPin(action: String, sourceFile: String, count: Int): Site = new {
+  file = sourceFile
+  pattern = #"\#(action)@([0-9a-f]{40} # v[\d.]+)"#
+  expect = count
+}
+
 tools: Mapping<String, Tool> = new {
+  ["action-gh-release"] = new {
+    resolver = "github-action"
+    resolverName = "softprops/action-gh-release"
+    sites = new {
+      actionPin("softprops/action-gh-release", rootBumpYml, 1)
+      actionPin("softprops/action-gh-release", bumpYml, 1)
+    }
+  }
   ["actionlint"] = new {
     sites = new { misePin("actionlint") }
+  }
+  ["checkout"] = new {
+    resolver = "github-action"
+    resolverName = "actions/checkout"
+    sites = new {
+      actionPin("actions/checkout", rootCiYml, 1)
+      actionPin("actions/checkout", rootBumpYml, 1)
+      actionPin("actions/checkout", ciYml, 6)
+      actionPin("actions/checkout", bumpYml, 1)
+    }
   }
   ["commitizen"] = new {
     resolverName = "pipx:commitizen"
@@ -68,6 +98,11 @@ tools: Mapping<String, Tool> = new {
       }
     }
   }
+  ["golangci-lint-action"] = new {
+    resolver = "github-action"
+    resolverName = "golangci/golangci-lint-action"
+    sites = new { actionPin("golangci/golangci-lint-action", ciYml, 1) }
+  }
   ["golines"] = new {
     resolverName = "go:github.com/golangci/golines"
     sites = new {
@@ -76,6 +111,11 @@ tools: Mapping<String, Tool> = new {
         pattern = #""go:github\.com/golangci/golines" = "([\d.]+)""#
       }
     }
+  }
+  ["goreleaser-action"] = new {
+    resolver = "github-action"
+    resolverName = "goreleaser/goreleaser-action"
+    sites = new { actionPin("goreleaser/goreleaser-action", bumpYml, 1) }
   }
   ["hk"] = new {
     sites = new {
@@ -104,8 +144,27 @@ tools: Mapping<String, Tool> = new {
   ["ls-lint"] = new {
     sites = new { misePin("ls-lint") }
   }
+  ["mise-action"] = new {
+    resolver = "github-action"
+    resolverName = "jdx/mise-action"
+    sites = new { actionPin("jdx/mise-action", ciYml, 4) }
+  }
   ["pkl"] = new {
     sites = new { misePin("pkl") }
+  }
+  ["setup-go"] = new {
+    resolver = "github-action"
+    resolverName = "actions/setup-go"
+    sites = new {
+      actionPin("actions/setup-go", rootCiYml, 1)
+      actionPin("actions/setup-go", ciYml, 3)
+      actionPin("actions/setup-go", bumpYml, 1)
+    }
+  }
+  ["setup-uv"] = new {
+    resolver = "github-action"
+    resolverName = "astral-sh/setup-uv"
+    sites = new { actionPin("astral-sh/setup-uv", rootCiYml, 1) }
   }
   ["shellcheck"] = new {
     sites = new { misePin("shellcheck") }
@@ -115,6 +174,11 @@ tools: Mapping<String, Tool> = new {
   }
   ["typos"] = new {
     sites = new { misePin("typos") }
+  }
+  ["upload-artifact"] = new {
+    resolver = "github-action"
+    resolverName = "actions/upload-artifact"
+    sites = new { actionPin("actions/upload-artifact", ciYml, 2) }
   }
   ["uv"] = new {
     sites = new { misePin("uv") }
