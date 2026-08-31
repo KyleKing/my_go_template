@@ -1,3 +1,18 @@
+## v0.13.0 (2026-08-31)
+
+### Feat
+
+- **doneram**: track GitHub Action pins with the github-action resolver
+
+### Fix
+
+- **ci**: skip verify-released in the hooks job, which duplicates the ci job
+- **copier**: restore .cz.toml version after an update resets it to 0.0.0
+
+### Refactor
+
+- **scripts**: drop pins doneram now owns
+
 ## v0.12.1 (2026-08-29)
 
 ### Fix
