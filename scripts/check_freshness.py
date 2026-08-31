@@ -1,13 +1,14 @@
-"""Check my_go_template's pinned GitHub Action versions and standalone tool pins for drift.
+"""Check my_go_template's pinned GitHub Action versions for drift.
 
 Action-pin convention: `uses: owner/repo@<40-char sha> # v<tag>` in workflow files. The same
 action is pinned identically across the root repo's own workflows and the jinja-templated
 workflows shipped to generated projects (go_template/.github/workflows/*.jinja); a drifted
 pin is patched in every file where it's found.
 
-Standalone pins: `hk` is report-only, since its version repeats five times. `golangci-lint` is pinned twice, as a mise
-tool version in go_template/.config/mise/conf.d/template.toml.jinja and as a `version:` for
-golangci-lint-action in go_template/.github/workflows/ci.yml.jinja, and the two must agree.
+doneram (.doneram.pkl) now owns every mise-backed tool pin, including hk's five-way patch and
+golangci-lint's cross-file agreement; this script only covers the SHA+tag action pins doneram's
+locator can't yet express, since patching them means resolving a tag and then looking up that
+tag's commit SHA rather than reading one version literal.
 """
 
 import logging
@@ -17,11 +18,9 @@ from pathlib import Path
 
 from freshness.checkers import (
     CheckResult,
-    extract_pin,
     fetch_github_commit,
     fetch_github_release,
     is_outdated,
-    patch_pin,
     render_report,
 )
 
@@ -38,10 +37,6 @@ ACTION_FILES = [
 ]
 
 ACTION_PIN_PATTERN = re.compile(r"uses:\s*([\w.\-]+/[\w.\-]+)@([0-9a-f]{40})\s*#\s*v([\w.\-]+)")
-
-TEMPLATE_HK_PKL = REPO_ROOT / "go_template" / "hk.pkl.jinja"
-TEMPLATE_TASKS_TOML = REPO_ROOT / "go_template" / ".config" / "mise" / "conf.d" / "template.toml.jinja"
-TEMPLATE_CI_YML = REPO_ROOT / "go_template" / ".github" / "workflows" / "ci.yml.jinja"
 
 
 def check_action_pins() -> list[CheckResult]:
@@ -84,73 +79,14 @@ def check_action_pins() -> list[CheckResult]:
     return results
 
 
-def check_standalone_pins() -> list[CheckResult]:
-    """Check the hk and golangci-lint version pins against their latest upstream releases.
-
-    Returns:
-        One CheckResult per pin, in file order.
-
-    """
-    results = []
-
-    current_hk = extract_pin(TEMPLATE_HK_PKL, r'min_hk_version = "([^"]+)"')
-    latest_hk = fetch_github_release("jdx", "hk")
-    if current_hk and latest_hk:
-        results.append(
-            CheckResult(
-                "hk",
-                str(TEMPLATE_HK_PKL.relative_to(REPO_ROOT)),
-                current_hk,
-                latest_hk,
-                is_outdated(current_hk, latest_hk),
-                note="report-only: the version repeats five times across hk.pkl.jinja and the mise pins, "
-                "which patch_pin cannot rewrite together; doneram patches all five from .doneram.pkl",
-            )
-        )
-
-    current_lint = extract_pin(TEMPLATE_TASKS_TOML, r'"golangci-lint"\s*=\s*"([^"]+)"')
-    ci_lint = extract_pin(TEMPLATE_CI_YML, r"version:\s*v([\w.\-]+)")
-    latest_lint = fetch_github_release("golangci", "golangci-lint")
-    if current_lint and ci_lint and current_lint != ci_lint:
-        results.append(
-            CheckResult(
-                "golangci-lint",
-                str(TEMPLATE_CI_YML.relative_to(REPO_ROOT)),
-                ci_lint,
-                current_lint,
-                drifted=True,
-                note="the ci.yml action pin disagrees with the mise tool pin; set both to the same version",
-            )
-        )
-    if current_lint and latest_lint:
-        drifted = is_outdated(current_lint, latest_lint)
-        if drifted:
-            patch_pin(
-                TEMPLATE_TASKS_TOML, f'"golangci-lint" = "{current_lint}"', f'"golangci-lint" = "{latest_lint}"'
-            )
-            patch_pin(TEMPLATE_CI_YML, f"version: v{current_lint}", f"version: v{latest_lint}")
-        results.append(
-            CheckResult(
-                "golangci-lint",
-                str(TEMPLATE_TASKS_TOML.relative_to(REPO_ROOT)),
-                current_lint,
-                latest_lint,
-                drifted,
-                note=f"also pinned as `version: v{latest_lint}` in {TEMPLATE_CI_YML.relative_to(REPO_ROOT)}",
-            )
-        )
-
-    return results
-
-
 def main() -> int:
-    """Run both freshness checks and return a process exit code.
+    """Run the action-pin freshness check and return a process exit code.
 
     Returns:
         0 if nothing drifted, 1 if any check found drift (files are patched in place regardless).
 
     """
-    results = check_action_pins() + check_standalone_pins()
+    results = check_action_pins()
     logger.info(render_report(results))
     return 1 if any(result.drifted for result in results) else 0
 
