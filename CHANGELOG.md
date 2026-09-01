@@ -1,3 +1,13 @@
+## v0.15.0 (2026-09-01)
+
+### Feat
+
+- **mise**: count subprocess tests toward the coverage floor
+
+### Fix
+
+- **typos**: read an abbreviated commit hash as a hash
+
 ## v0.14.2 (2026-09-01)
 
 ### Fix
