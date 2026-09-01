@@ -1,3 +1,9 @@
+## v0.14.1 (2026-09-01)
+
+### Fix
+
+- run ctt through uvx so the freshness job can regenerate renders
+
 ## v0.14.0 (2026-09-01)
 
 ### Feat
