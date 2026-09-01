@@ -43,6 +43,7 @@ local rootBumpYml = ".github/workflows/bump_version.yml"
 local bumpYml = "go_template/.github/workflows/bump_version.yml.jinja"
 local publishYml = "go_template/.github/workflows/publish.yml.jinja"
 local freshnessYml = ".github/workflows/freshness.yml"
+local rootMiseToml = "mise.toml"
 
 /// A bare mise tool key, e.g. `actionlint = "1.7.12"`.
 local function misePin(key: String): Site = new {
@@ -170,7 +171,13 @@ tools: Mapping<String, Tool> = new {
     }
   }
   ["pkl"] = new {
-    sites = new { misePin("pkl") }
+    sites = new {
+      misePin("pkl")
+      new Site {
+        file = rootMiseToml
+        pattern = #"pkl = "([\d.]+)""#
+      }
+    }
   }
   ["setup-go"] = new {
     resolver = "github-action"
