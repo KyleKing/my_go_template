@@ -1,22 +1,29 @@
 # Next Steps
 
 Open work for my_go_template and its children. Everything here was verified
-against the repo on 2026-08-29, and anything that turned out to be done was
+against the repo on 2026-09-01, and anything that turned out to be done was
 removed rather than marked done. Settled design choices live in
 [docs/DECISIONS.md](docs/DECISIONS.md), and the per-change history lives in the
 git log.
 
-Template is at v0.12.1. Every child (`aragonite`, `djot-fmt`, `gh-lazydispatch`,
-`gh-repo-dashboard`, `gh-star-search`, `gh-sweep`, `jj-diff`) is pinned at
-v0.12.0, so one `copier update` per child picks up the concurrency guard on Bump
-Version and the `.pre-commit-config.yaml` removal.
+Every child is behind the current release. `wavez` is the closest at v0.14.1.
+`gh-lazydispatch`, `gh-repo-dashboard`, and `gh-sweep` sit at v0.13.1, and
+`aragonite`, `djot-fmt`, `gh-star-search`, `jj-diff`, and `second-look` at
+v0.13.0. One `copier update` per child picks up the doneram tool bumps and the
+Dependabot ignore for the untagged `charmbracelet/x` submodules. Expect a
+`hk fix --all` in the same commit, per the golines note below. `what-did-ai-do`
+records `_src_path` as this template but pins `v0.3.2`, which is not a tag in
+this series and needs a look.
 
 ## Template repo
 
-- The render no longer ships `.pre-commit-config.yaml`; `hk` owns the hooks and
-  CI runs `hk check --all`. Children generated before v0.12.1 still have the
-  file on disk, because `copier update` adds and patches files but never
-  deletes them. Remove it by hand in each child
+- golangci-lint 2.13.2 deprecates the gofumpt `extra-rules` key that
+  `.golangci.toml.jinja` sets, so every child prints a warning on every format
+  run. `extra.group-params` is the named replacement and silences it, but the
+  two are not equivalent: measured against wavez, `extra-rules` differs from
+  plain gofumpt by 31 diff lines and `group-params` by 12, so the swap relaxes a
+  rule and reformats multiline call sites. Taking it means a deliberate
+  reformat commit in every child, which is why it is not done yet
 - Nothing formats TOML in this repo (this repo has no `hk.pkl` of its own), so
   the `.toml.jinja` sources and the committed `.ctt/` renders stay tombi-clean
   only by hand. The check is `tombi format --check` over `.ctt/**/*.toml` after a
@@ -33,17 +40,20 @@ Version and the `.pre-commit-config.yaml` removal.
 - `ctt` renders in place. `sync_with_ctt.sh` clears `.ctt/*/` first, but the
   `copier-template-tester` pre-commit hook still renders in place and reports a
   stale tree as current. The real fix is upstream in copier-template-tester
-- Dependabot cannot read the action pins inside `go_template/**/*.jinja`, so the
-  SHAs this template ships are bumped by hand. Deferred deliberately: pointing
-  Dependabot at `.ctt/default` would open PRs against generated output that the
-  next `ctt` run reverts. A real fix is a script that rewrites the jinja sources
-  from a child's merged bump
 - The commitizen-action step in `bump_version.yml.jinja` builds a Docker image on
   every Bump Version run and failed once on a Docker Hub timeout. A pipx install
   would remove the registry dependency
 - `mise run demo` needs vhs, deliberately not pinned in `[tools]` because the CI
   `hooks` job would then install it on every run. Recorded as a manual
   prerequisite in `CONTRIBUTING.md.jinja`
+- A golangci-lint bump reformats a whole child, because golines' wrapping moves
+  with it. 2.12.2 to 2.13.2 rewrapped 18 files in wavez. Run `hk fix --all`
+  in the same commit as the `copier update` rather than leaving the churn to
+  surface in the next unrelated change
+- `docs/troubleshooting.md` is template-owned, so a project-specific entry
+  appended to it conflicts on the next update. The render now carries a
+  `docs/troubleshooting.local.md` pointer for that; wavez was the first child to
+  hit the conflict and move its entry across
 
 ### Upstream from projects
 
