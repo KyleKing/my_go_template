@@ -1,3 +1,13 @@
+## v0.14.0 (2026-09-01)
+
+### Feat
+
+- **doneram**: install the pinned release and drop Dependabot
+
+### Fix
+
+- **doneram**: install pkl so the freshness job can read the config
+
 ## v0.13.1 (2026-09-01)
 
 ### Fix
