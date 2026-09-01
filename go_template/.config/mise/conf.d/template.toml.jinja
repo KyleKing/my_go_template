@@ -86,10 +86,21 @@ description = "Run tests with coverage"
 run = "go test -coverprofile=coverage.out ./..."
 raw_args = true
 
+# `go test -cover` instruments the test binary, so a test that drives the built
+# binary reads as 0% however much it exercises. A TestMain that builds the child
+# with `go build -cover` and passes it GOCOVERDIR=$COVERDIR_SUBPROCESS puts that
+# half back. A project with no such test writes nothing there and the merge is a
+# no-op, so this is correct either way.
 [tasks."test:coverage-min"]
-description = "Verify minimum coverage threshold (70%)"
+description = "Verify minimum coverage threshold (70%), subprocess tests included"
 run = '''
-go test -coverprofile=coverage.out -coverpkg=./... ./...
+set -euo pipefail
+dir=$(mktemp -d)
+trap 'rm -rf "$dir"' EXIT
+mkdir -p "$dir/unit" "$dir/subprocess" "$dir/merged"
+COVERDIR_SUBPROCESS="$dir/subprocess" go test -count=1 -cover -coverpkg=./... ./... -args -test.gocoverdir="$dir/unit"
+go tool covdata merge -i="$dir/unit,$dir/subprocess" -o="$dir/merged"
+go tool covdata textfmt -i="$dir/merged" -o=coverage.out
 coverage=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
 echo "Current coverage: ${coverage}%"
 if (( $(awk "BEGIN {print ($coverage < 70)}") )); then
