@@ -1,3 +1,10 @@
+## v0.13.1 (2026-09-01)
+
+### Fix
+
+- **ci**: stop Dependabot resolving untagged charmbracelet/x submodules
+- **scripts**: generate the tap deploy key inside 1Password
+
 ## v0.13.0 (2026-08-31)
 
 ### Feat
