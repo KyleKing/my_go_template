@@ -99,6 +99,21 @@ tools: Mapping<String, Tool> = new {
     resolverName = "peter-evans/create-pull-request"
     sites = new { actionPin("peter-evans/create-pull-request", freshnessYml, 1) }
   }
+  ["doneram"] = new {
+    resolver = "github-action"
+    resolverName = "kyleking/doneram"
+    sites = new { actionPin("kyleking/doneram", freshnessYml, 1) }
+  }
+  ["doneram-version"] = new {
+    resolver = "github-release"
+    resolverName = "kyleking/doneram"
+    sites = new {
+      new Site {
+        file = freshnessYml
+        pattern = #"version: v([\d.]+)"#
+      }
+    }
+  }
   ["download-artifact"] = new {
     resolver = "github-action"
     resolverName = "actions/download-artifact"
@@ -187,7 +202,6 @@ tools: Mapping<String, Tool> = new {
       actionPin("actions/setup-go", ciYml, 3)
       actionPin("actions/setup-go", bumpYml, 1)
       actionPin("actions/setup-go", publishYml, 2)
-      actionPin("actions/setup-go", freshnessYml, 1)
     }
   }
   ["setup-uv"] = new {
