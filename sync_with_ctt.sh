@@ -18,7 +18,7 @@ fi
 # whatever the template shipped when the directory was first created.
 echo "==> Regenerating renders from scratch..."
 rm -rf .ctt/*/
-ctt
+uvx --from copier-template-tester ctt
 
 echo "==> Syncing configuration files..."
 cp "$CTT_DIR/.editorconfig" go_template/.editorconfig
