@@ -17,6 +17,19 @@ this series and needs a look.
 
 ## Template repo
 
+- The weekly Freshness job has failed every run since it was added. doneram's PR
+  edits the repo's own `.github/workflows/*`, and GitHub rejects the push with
+  "refusing to allow a GitHub App to create or update workflow
+  `.github/workflows/freshness.yml` without `workflows` permission"
+  ([run 33466834966](https://github.com/KyleKing/my_go_template/actions/runs/33466834966)).
+  Switching to the app token fixed the `GITHUB_TOKEN` half but not this. Two
+  ways out, and it needs Kyle either way. Granting the doneram App
+  `Workflows: read and write` in its settings, then accepting the permission on
+  the installation, is the small change, and it lets the App rewrite any CI
+  definition in every repo it is installed on. Dropping `rootCiYml`,
+  `rootBumpYml`, and `freshnessYml` from `.doneram.pkl` keeps the App unable to
+  touch workflows and leaves those three files pinned by hand
+
 - golangci-lint 2.13.2 deprecates the gofumpt `extra-rules` key that
   `.golangci.toml.jinja` sets, so every child prints a warning on every format
   run. `extra.group-params` is the named replacement and silences it, but the
