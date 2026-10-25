@@ -1,3 +1,13 @@
+## v0.16.0 (2026-10-25)
+
+### Feat
+
+- **demo**: add demo:stills and test:golden-orphans tasks
+
+### Fix
+
+- **demo**: keep stills.tape alive until VHS writes the screenshot
+
 ## v0.15.2 (2026-10-25)
 
 ### Fix
