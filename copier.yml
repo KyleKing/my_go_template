@@ -9,6 +9,7 @@ _skip_if_exists:
   - README.md
   - .config/mise.toml
   - cmd/{{ project_name }}/main.go
+  - demo/stills.tape
   - go.mod
 
 _tasks:

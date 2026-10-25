@@ -46,6 +46,11 @@ build/
 go.work
 go.work.sum
 
+{% if project_type == 'cli' -%}
+# Scratch output of the demo tapes
+demo/.work/
+
+{% endif -%}
 # Dependency directories
 vendor/
 
