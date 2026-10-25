@@ -1,3 +1,9 @@
+## v0.15.2 (2026-10-25)
+
+### Fix
+
+- **template**: replace gofumpt's deprecated extra-rules and take mise-action v5
+
 ## v0.15.1 (2026-09-01)
 
 ### Fix
