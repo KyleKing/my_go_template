@@ -3,6 +3,7 @@
 #
 # Every Screenshot follows a Wait on text only that screen draws, so a still never
 # shows a half-loaded or wrong screen. A Wait that never matches fails the render.
+# Keep a Sleep after each Screenshot: VHS writes the file asynchronously and can exit first.
 
 Output demo/.work/stills-__NAME__.gif
 
@@ -20,6 +21,7 @@ Env COLORTERM "truecolor"
 Hide
 Type "./{{ project_name }} --help" Enter
 Show
-Wait /Usage:/
+Wait+Screen /Usage:/
 Sleep 300ms
 Screenshot docs/images/__NAME__-help.png
+Sleep 1s
