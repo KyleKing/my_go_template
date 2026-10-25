@@ -24,7 +24,7 @@ run = "rm -f coverage.out"
 
 [tasks.demo]
 description = "Generate VHS demo recordings"
-run = 'find . -name "*.tape" -not -path "./.git/*" -exec vhs {} \;'
+run = 'find . -name "*.tape" -not -name stills.tape -not -path "./.git/*" -exec vhs {} \;'
 depends = ["build"]
 
 [tasks.format]
@@ -69,6 +69,36 @@ if (( $(awk "BEGIN {print ($coverage < 70)}") )); then
     echo "Coverage ${coverage}% is below 70% minimum threshold"
     exit 1
 fi
+'''
+
+# `-update` rewrites goldens and never deletes one, so a golden whose test was renamed
+# or removed lingers. GOFLAGS=-tags=... passes through for goldens behind a build tag.
+[tasks."test:golden-orphans"]
+description = "Fail on any .golden file that no test regenerates"
+shell = "bash -c"
+run = '''
+set -euo pipefail
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+mkdir "$work/tree"
+rsync -a --exclude=.git --exclude='*.golden' ./ "$work/tree/"
+find . -name '*.golden' -not -path './.git/*' | sort > "$work/have"
+if [ ! -s "$work/have" ]; then
+  echo "No .golden files to check"
+  exit 0
+fi
+pkgs=$(sed -E 's#/testdata/.*#/#' "$work/have" | sort -u)
+cd "$work/tree"
+# shellcheck disable=SC2086 # pkgs is a list of package directories
+go test -count=1 $pkgs -update
+find . -name '*.golden' | sort > "$work/made"
+orphans=$(comm -23 "$work/have" "$work/made")
+if [ -n "$orphans" ]; then
+  echo "Orphan golden files (no test regenerated them):" >&2
+  echo "$orphans" >&2
+  exit 1
+fi
+echo "No orphan golden files"
 '''
 
 [tasks."test:view-coverage"]

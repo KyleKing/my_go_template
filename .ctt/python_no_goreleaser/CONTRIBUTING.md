@@ -27,6 +27,7 @@ sorts after `template.toml` (`user.toml` works; `project.toml` does not, since
 | `mise run ci` | Full CI check (tests + build) |
 | `mise run clean` | Clean build artifacts |
 | `mise run demo` | Generate VHS demo recordings (needs [vhs](https://github.com/charmbracelet/vhs) on `PATH`; it is not pinned in `[tools]`) |
+| `mise run demo:stills` | Render still PNGs per breakpoint from `demo/stills.tape` (`STILLS_BREAKPOINTS`, `STILLS_FONT` override the sizes and font) |
 | `mise run dev` | Run from source (`go run`, always reflects current code) |
 | `mise run format` | Auto-fix lint and formatting |
 | `mise run hooks` | Run git hooks |
@@ -37,6 +38,7 @@ sorts after `template.toml` (`user.toml` works; `project.toml` does not, since
 | `mise run python:types` | Type check the Python bindings with ty |
 | `mise run test` | Run tests with coverage |
 | `mise run test:coverage-min` | Fail below the 70% coverage threshold |
+| `mise run test:golden-orphans` | Fail on any `.golden` file no test regenerates |
 | `mise run test:view-coverage` | Open the coverage report in a browser |
 | `mise tasks` | List all available tasks |
 
