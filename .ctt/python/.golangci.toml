@@ -9,8 +9,8 @@ enable = ["gci", "gofmt", "gofumpt", "goimports"]
 [formatters.settings.gci]
 sections = ["standard", "default", "prefix(github.com/user_ctt/test-template)"]
 
-[formatters.settings.gofumpt]
-extra-rules = true
+[formatters.settings.gofumpt.extra]
+group-params = true
 
 [formatters.settings.goimports]
 local-prefixes = ["github.com/user_ctt/test-template"]
