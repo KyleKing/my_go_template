@@ -1,3 +1,9 @@
+## v0.17.0 (2026-10-26)
+
+### Feat
+
+- **tasks**: let test:golden-orphans honor GOLDEN_TAGS
+
 ## v0.16.0 (2026-10-25)
 
 ### Feat
