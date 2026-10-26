@@ -35,6 +35,18 @@ template has nothing further to say about after the first render: `README.md`,
 The resolution procedure lives in `go_template/AGENTS.md.jinja` so it reaches every
 generated project.
 
+## Golden snapshot tasks stay in the project
+
+gh-repo-dashboard keeps `test:golden`, `test:golden-update`, and a `ci` that runs the
+golden-tagged tests, and they conflicted on every `copier update`. Each one hard-codes
+a package (`./internal/app/`), a test name (`TestGolden`), and a build tag, and none
+of those exist in a project without that layout. A template version would need three
+questions or an empty default that does nothing, so the tasks stay local.
+
+The generic part is the orphan check, which takes `GOLDEN_TAGS` for goldens behind a
+build tag. Projects add their own tasks in a sibling `conf.d` file and override `ci`
+there.
+
 ## Decisions recorded next to their code
 
 - The two-GOROOT failure from pairing `actions/setup-go` with `jdx/mise-action`
