@@ -51,6 +51,7 @@ When a check fails, fix the cause. Do not skip a test, widen a timeout, or disab
 linter to get to green. Three fix-and-push rounds with no new root cause means stop and
 report what you found.
 
+
 ## Layout
 
 Public API is whatever this module exports, so treat every exported symbol as a
