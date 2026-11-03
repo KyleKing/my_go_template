@@ -1,3 +1,10 @@
+## v0.17.1 (2026-11-03)
+
+### Fix
+
+- ignore bracketed key-hint spans in typos config
+- allow PN in typos words so PNGs stops flagging
+
 ## v0.17.0 (2026-10-26)
 
 ### Feat
