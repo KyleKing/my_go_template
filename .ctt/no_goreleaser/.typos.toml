@@ -12,3 +12,5 @@ extend-ignore-identifiers-re = ["^[0-9a-f]{7,40}$"]
 [default.extend-words]
 decorder = "decorder"
 importas = "importas"
+# "PNGs" tokenizes as "PN" + "Gs", and PN is a typo for ON.
+pn = "pn"
