@@ -28,9 +28,19 @@ run = ["go test -v -coverprofile=coverage.out ./...", "go build -v ./..."]
 description = "Build and test ignoring any go.work, the way CI sees the module"
 # A go.work makes a sibling checkout win over the version go.mod pins, so local
 # green says nothing about whether the released dependency actually works. CI has
-# no workspace, so this is the only local check that matches it.
+# no workspace, so this is the only local check that matches it. With no go.work
+# at all the dependency set is already the released one, so the task is a no-op
+# and skips itself rather than running the suite a second time.
 env = { GOWORK = "off" }
-run = ["go build ./...", "go test ./..."]
+shell = "bash -c"
+run = '''
+if [ ! -f go.work ]; then
+  echo "no go.work; the released dependency set is what ci already ran"
+  exit 0
+fi
+go build ./...
+go test ./...
+'''
 
 [tasks.clean]
 description = "Clean build artifacts"
