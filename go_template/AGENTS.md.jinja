@@ -126,9 +126,17 @@ commit; either rename it or add its glob to that exclude.
 ## TUI testing
 
 A subprocess pipe is not a terminal, so the program detects a non-tty and never renders.
-Exploratory checks need a real PTY: run it under `tmux new -d -x 80 -y 24 <cmd>`, drive
-it with `tmux send-keys`, and read what actually rendered with `tmux capture-pane -p`
-(`-e` keeps ANSI codes). A tab in captured output is not proof the program emitted one:
+Exploratory checks need a real PTY: run it under `tmux new -d -s tui-check -x 80 -y 24
+<cmd>`, drive it with `tmux send-keys`, and read what actually rendered with
+`tmux capture-pane -p` (`-e` keeps ANSI codes).
+
+Kill the session with `tmux kill-session -t tui-check` once the screen has been read.
+A detached session outlives the check that started it, and a TUI whose terminal goes
+away can spin rather than exit: 19 orphaned processes from one such burst held 40-49%
+CPU each for as long as 10 hours. Name the session, because an anonymous `-d` leaves
+nothing to identify a stray one by later.
+
+A tab in captured output is not proof the program emitted one:
 `tmux capture-pane` re-emits a tab wherever the cursor was advanced across cells that
 were never written. Check which column the text actually lands on before chasing it as
 a rendering bug. For scripted tests prefer

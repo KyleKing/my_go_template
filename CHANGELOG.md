@@ -1,3 +1,9 @@
+## v0.17.2 (2026-11-04)
+
+### Fix
+
+- **template**: require a named tmux session and its teardown for TUI checks
+
 ## v0.17.1 (2026-11-03)
 
 ### Fix
