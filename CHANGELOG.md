@@ -1,3 +1,9 @@
+## v0.17.3 (2026-11-04)
+
+### Fix
+
+- **template**: skip verify-released when no go.work exists
+
 ## v0.17.2 (2026-11-04)
 
 ### Fix
