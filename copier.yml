@@ -19,14 +19,16 @@ _tasks:
 _message_after_copy: |
   The '{{ project_name }}' Go project has been initialized!
 
-  1. Review the changes and commit
+  1. Review the generated files
   2. Install mise tools: `mise install`
   3. Install git hooks: `hk install --mise`
   4. Run `mise run ci` to verify setup
-  5. If this is a new project, create the GitHub repo:
+  5. If this is a new project, commit and create the GitHub repo:
 
       ```sh
-      gh repo create "{{ project_name }}" --source=. --remote=origin --push
+      git add --all
+      git commit --message 'feat: Initialize with my_go_template'
+      gh repo create "{{ project_name }}" --public --source=. --remote=origin --push
       ```
 
 # ====== QUESTIONS ======
