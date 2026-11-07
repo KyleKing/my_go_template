@@ -1,3 +1,9 @@
+## v0.17.4 (2026-11-07)
+
+### Fix
+
+- correct guidance on gh repo creation
+
 ## v0.17.3 (2026-11-04)
 
 ### Fix
