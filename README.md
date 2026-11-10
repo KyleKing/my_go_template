@@ -90,6 +90,9 @@ lands. `gh-star-search` is the worked example (commits `f64b1c1` and `20a2597`):
   action and runs on Linux only, so the bump and the release have to be separate
   jobs, and the release job checks out `needs.bump-version.outputs.tag` rather
   than `version`, which is bare and does not name a ref
+- upload `body.md` from the bump job and download it in the release job, because
+  `--release-notes body.md` reads the file from the workspace and the release job's
+  checkout does not contain it
 - build each remaining platform in its own `bump_version.yml` job, upload it as an
   artifact, and attach it to the release afterwards with `gh release upload`,
   appending its digest to `checksums.txt`
