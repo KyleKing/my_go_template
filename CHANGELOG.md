@@ -1,3 +1,10 @@
+## v0.17.5 (2026-11-10)
+
+### Fix
+
+- **tasks**: run coverage-min under bash
+- **tasks**: run golden-orphans with GOWORK=off
+
 ## v0.17.4 (2026-11-07)
 
 ### Fix
