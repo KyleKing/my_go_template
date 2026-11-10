@@ -30,8 +30,10 @@ Known false negatives, each of which has already cost a session:
   writes `hook.hk-*.command` into `.git/config` and creates no `.git/hooks/pre-commit`.
   Check with `git config --get-regexp '^hook\.'` (expect six entries) or
   `git hook list pre-commit` (expect `hk-pre-commit`). A file-existence check is wrong.
-- **Never pipe or chain `git commit`.** `git commit … | tail` reports the pipe's exit
-  code, so a failing hook looks like success and the follow-up push ships nothing.
+- **Never pipe or chain `git commit`.** That means `|`, `;`, `&&`, and `||`.
+  `git commit … | tail` reports the pipe's exit code, and `;` runs the next command
+  after a rejected commit, so a failing hook looks like success and the follow-up push
+  ships nothing.
   Commit as its own command, then confirm with `git log -1`. Hooks rewrite files here;
   when one fails that way, `git add -A` its edits and commit again.
 - **A workflow that passes yamllint can still be broken.** `hk.pkl` excludes
