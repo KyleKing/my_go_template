@@ -115,6 +115,8 @@ fi
 # or removed lingers. GOLDEN_TAGS=<tag> includes goldens behind a build tag.
 [tasks."test:golden-orphans"]
 description = "Fail on any .golden file that no test regenerates"
+# The copy keeps a gitignored go.work, and its `use` paths do not resolve from the copy.
+env = { GOWORK = "off" }
 shell = "bash -c"
 run = '''
 set -euo pipefail
