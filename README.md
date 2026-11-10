@@ -101,6 +101,27 @@ lands. `gh-star-search` is the worked example (commits `f64b1c1` and `20a2597`):
 goreleaser OSS has no `--split`/`continue`, so one goreleaser run cannot span
 runners and the extra platforms have to be attached after the fact.
 
+
+#### Releasing a project for one OS
+
+The matrix is also wrong in the other direction: a project that only runs on
+one OS fails to compile on every other target, including the `ubuntu-latest`
+runners every CI job uses. `sys-guardian` hit this on `internal/mem`:
+`unix.SysctlUint32` is darwin-only, so `go test ./...`, golangci-lint, and
+goreleaser all went red until the build was scoped down. The fix is
+per-project for the same reason the cgo one is:
+
+- build-tag the platform-only implementation (`foo_darwin.go` with
+  `//go:build darwin`) and add a `//go:build !darwin` stub that returns an
+  error, so Linux CI still compiles, tests, and lints the package
+- cut `goos`/`goarch` in `.goreleaser.yml` to the real target and drop the
+  `ignore` block with it
+- expect Windows to stay uncompilable rather than stubbing POSIX signals
+  away (`syscall.SIGSTOP`/`SIGCONT` do not exist there); only POSIX targets
+  need to build
+- a `runtime.GOOS` check that fails fast beats a daemon logging
+  "unsupported platform" every tick
+
 ### Documentation
 - `README.md` - Project overview and usage
 - `CONTRIBUTING.md` - Development guide

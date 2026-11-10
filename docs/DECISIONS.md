@@ -15,6 +15,9 @@ different cgo dependency would drop a different set.
 A boolean would also branch two files (`.goreleaser.yml.jinja` and
 `bump_version.yml.jinja`) for one child out of five, so the template keeps
 `CGO_ENABLED=0` as the unconditional default and documents the rework instead.
+`sys-guardian` found the second per-project matrix divergence — a single-OS
+project, rather than a cgo matrix — which lands in the same place: a recipe in
+the README ("Releasing a project for one OS"), not a question.
 The recipe is in the README under "Releasing a project that needs cgo", worked
 from `gh-star-search` commits `f64b1c1` and `20a2597`.
 
