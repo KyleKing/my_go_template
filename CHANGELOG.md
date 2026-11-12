@@ -1,3 +1,9 @@
+## v0.18.0 (2026-11-12)
+
+### Feat
+
+- **lint**: flag counts that can slip under zero via a ruleguard check
+
 ## v0.17.5 (2026-11-10)
 
 ### Fix
