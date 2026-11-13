@@ -1,0 +1,30 @@
+// Version literals this project pins in files it owns, checked by doneram.
+// The weekly Freshness workflow patches these and opens a draft PR.
+//
+// Pins inside template-managed files (the mise tools in
+// .config/mise/conf.d/template.toml, hk.pkl, and the ci, bump_version, and
+// freshness workflows) are deliberately absent: my_go_template tracks those
+// and they arrive here through a copier update, so patching them locally
+// would only make the next update a merge. What belongs here is everything
+// this project added itself: a tool in its own mise conf.d file, a
+// Dockerfile tag, or a version literal in a script.
+
+amends "package://github.com/kyleking/doneram/releases/download/v0.6.0/doneram@0.6.0#/Config.pkl"
+import "package://github.com/kyleking/doneram/releases/download/v0.6.0/doneram@0.6.0#/Config.pkl"
+
+tools = new {
+  ["doneram-schema"] = new {
+    resolver = "github-release"
+    resolverName = "kyleking/doneram"
+    sites = new {
+      new Config.Site {
+        file = ".doneram.pkl"
+        pattern = #"releases/download/v([\d.]+)/doneram"#
+      }
+      new Config.Site {
+        file = ".doneram.pkl"
+        pattern = #"doneram@([\d.]+)#/Config\.pkl"#
+      }
+    }
+  }
+}
