@@ -1,3 +1,9 @@
+## v0.19.0 (2026-11-13)
+
+### Feat
+
+- replace dependabot with a rendered doneram freshness workflow
+
 ## v0.18.0 (2026-11-12)
 
 ### Feat
