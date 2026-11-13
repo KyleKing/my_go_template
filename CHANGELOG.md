@@ -1,3 +1,9 @@
+## v0.20.0 (2026-11-13)
+
+### Feat
+
+- give generated projects the go modules freshness step
+
 ## v0.19.0 (2026-11-13)
 
 ### Feat
