@@ -9,8 +9,8 @@
 // this project added itself: a tool in its own mise conf.d file, a
 // Dockerfile tag, or a version literal in a script.
 
-amends "package://github.com/kyleking/doneram/releases/download/v0.6.0/doneram@0.6.0#/Config.pkl"
-import "package://github.com/kyleking/doneram/releases/download/v0.6.0/doneram@0.6.0#/Config.pkl"
+amends "package://github.com/kyleking/doneram/releases/download/v0.6.1/doneram@0.6.1#/Config.pkl"
+import "package://github.com/kyleking/doneram/releases/download/v0.6.1/doneram@0.6.1#/Config.pkl"
 
 tools = new {
   ["doneram-schema"] = new {

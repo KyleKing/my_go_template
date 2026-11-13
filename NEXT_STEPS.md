@@ -22,13 +22,10 @@ this series and needs a look.
   "refusing to allow a GitHub App to create or update workflow
   `.github/workflows/freshness.yml` without `workflows` permission"
   ([run 33466834966](https://github.com/KyleKing/my_go_template/actions/runs/33466834966)).
-  Switching to the app token fixed the `GITHUB_TOKEN` half but not this. Two
-  ways out, and it needs Kyle either way. Granting the doneram App
-  `Workflows: read and write` in its settings, then accepting the permission on
-  the installation, is the small change, and it lets the App rewrite any CI
-  definition in every repo it is installed on. Dropping `rootCiYml`,
-  `rootBumpYml`, and `freshnessYml` from `.doneram.pkl` keeps the App unable to
-  touch workflows and leaves those three files pinned by hand
+  The chosen fix is the app path: the `doneram` App carries Workflows read and
+  write, and `doner/APP_SETUP.md` covers the scoped install and the two
+  per-repo secrets that are still missing. Until those land the workflow falls
+  back to `GITHUB_TOKEN` and fails the same way on workflow-file pushes
 
 - golangci-lint 2.13.2 deprecates the gofumpt `extra-rules` key that
   `.golangci.toml.jinja` sets, so every child prints a warning on every format
@@ -67,6 +64,9 @@ this series and needs a look.
   appended to it conflicts on the next update. The render now carries a
   `docs/troubleshooting.local.md` pointer for that; wavez was the first child to
   hit the conflict and move its entry across
+- The `library` ctt case generates a project with zero Go files, so
+  `mise run ci` fails immediately in a fresh render and nothing in its README
+  says that is expected (open from TEMPLATE_STANDARDIZATION.md)
 
 ### Upstream from projects
 

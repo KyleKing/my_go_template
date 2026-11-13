@@ -4,7 +4,7 @@ name: Freshness
 "on":
   schedule:
     - cron: "0 9 * * 1"
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 permissions:
   contents: read
