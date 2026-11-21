@@ -107,7 +107,7 @@ publish_python:
 go_version:
   type: str
   help: Go toolchain version pinned in mise
-  default: "1.26.6"
+  default: "1.26.11"
   when: false
 
 python_version:

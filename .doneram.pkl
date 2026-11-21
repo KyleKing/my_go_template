@@ -6,8 +6,8 @@
 // A site that matches a different number of times than `expect` fails the run.
 // A pattern that silently stops matching is how a pin goes stale unnoticed.
 
-amends "package://github.com/kyleking/doneram/releases/download/v0.6.1/doneram@0.6.1#/Config.pkl"
-import "package://github.com/kyleking/doneram/releases/download/v0.6.1/doneram@0.6.1#/Config.pkl"
+amends "package://github.com/kyleking/doneram/releases/download/v0.21.0/doneram@0.21.0#/Config.pkl"
+import "package://github.com/kyleking/doneram/releases/download/v0.21.0/doneram@0.21.0#/Config.pkl"
 
 /// Brings the rendered .ctt output back in sync after any patch.
 afterPatch = "./sync_with_ctt.sh"
@@ -65,13 +65,17 @@ tools = new {
       actionPin("actions/checkout", ciYml, 6)
       actionPin("actions/checkout", bumpYml, 1)
       actionPin("actions/checkout", publishYml, 3)
-      actionPin("actions/checkout", freshnessYml, 1)
-      actionPin("actions/checkout", pkgFreshnessYml, 1)
+      actionPin("actions/checkout", freshnessYml, 2)
+      actionPin("actions/checkout", pkgFreshnessYml, 2)
     }
   }
   ["commitizen"] = new {
     resolverName = "pipx:commitizen"
     sites = new { quotedMisePin("pipx:commitizen") }
+  }
+  ["copier"] = new {
+    resolverName = "pipx:copier"
+    sites = new { quotedMisePin("pipx:copier") }
   }
   ["create-github-app-token"] = new {
     resolver = "github-action"
@@ -93,8 +97,8 @@ tools = new {
     resolver = "github-action"
     resolverName = "kyleking/doneram"
     sites = new {
-      actionPin("kyleking/doneram", freshnessYml, 1)
-      actionPin("kyleking/doneram", pkgFreshnessYml, 1)
+      actionPin("kyleking/doneram", freshnessYml, 2)
+      actionPin("kyleking/doneram", pkgFreshnessYml, 2)
     }
   }
   ["doneram-schema"] = new {
@@ -129,6 +133,18 @@ tools = new {
     resolver = "github-action"
     resolverName = "actions/download-artifact"
     sites = new { actionPin("actions/download-artifact", publishYml, 1) }
+  }
+  // The Go language level is a copier answer and stays put; its patch
+  // releases carry the toolchain's security fixes, so those move here.
+  ["go"] = new {
+    pattern = "1.26.#"
+    sites = new {
+      new Config.Site {
+        file = "copier.yml"
+        pattern = #"go_version:\n(?:.*\n){0,3}?  default: "(\d+\.\d+\.\d+)""#
+        window = 4
+      }
+    }
   }
   ["golangci-lint"] = new {
     sites = new {
@@ -193,8 +209,8 @@ tools = new {
     resolverName = "jdx/mise-action"
     sites = new {
       actionPin("jdx/mise-action", ciYml, 4)
-      actionPin("jdx/mise-action", freshnessYml, 1)
-      actionPin("jdx/mise-action", pkgFreshnessYml, 1)
+      actionPin("jdx/mise-action", freshnessYml, 2)
+      actionPin("jdx/mise-action", pkgFreshnessYml, 2)
     }
   }
   ["pkl"] = new {
@@ -222,7 +238,7 @@ tools = new {
     sites = new {
       actionPin("astral-sh/setup-uv", rootCiYml, 1)
       actionPin("astral-sh/setup-uv", publishYml, 3)
-      actionPin("astral-sh/setup-uv", freshnessYml, 1)
+      actionPin("astral-sh/setup-uv", freshnessYml, 2)
     }
   }
   ["shellcheck"] = new {
