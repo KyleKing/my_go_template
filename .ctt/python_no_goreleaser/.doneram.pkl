@@ -1,16 +1,21 @@
-// Version literals this project pins in files it owns, checked by doneram.
-// The weekly Freshness workflow patches these and opens a draft PR.
+// Version literals this project owns, checked by doneram. The weekly
+// Freshness workflow patches them and opens draft PRs.
 //
-// Pins inside template-managed files (the mise tools in
-// .config/mise/conf.d/template.toml, hk.pkl, and the ci, bump_version, and
-// freshness workflows) are deliberately absent: my_go_template tracks those
-// and they arrive here through a copier update, so patching them locally
-// would only make the next update a merge. What belongs here is everything
-// this project added itself: a tool in its own mise conf.d file, a
-// Dockerfile tag, or a version literal in a script.
+// Most pins need no entry: doneram discovers GitHub Actions, mise tools,
+// and Terraform pins on its own, scans lockfiles and go.mod for advisories,
+// and reports end-of-life runtimes. Pins in files my_go_template maintains
+// (the workflows, .config/mise/conf.d/template.toml, hk.pkl) are left to
+// the template on purpose: its next release carries them, and the copier
+// update this workflow proposes brings them here, so patching them locally
+// would only make that update a merge. A version literal discovery cannot
+// see, in a Dockerfile, a script, or a file this project added, goes below.
 
-amends "package://github.com/kyleking/doneram/releases/download/v0.6.1/doneram@0.6.1#/Config.pkl"
-import "package://github.com/kyleking/doneram/releases/download/v0.6.1/doneram@0.6.1#/Config.pkl"
+amends "package://github.com/kyleking/doneram/releases/download/v0.20.0/doneram@0.20.0#/Config.pkl"
+import "package://github.com/kyleking/doneram/releases/download/v0.20.0/doneram@0.20.0#/Config.pkl"
+
+/// Run before a weekly PR opens: a bump that breaks it is bisected out
+/// into its own PR, so the rest still merge.
+validate = "mise run ci"
 
 tools = new {
   ["doneram-schema"] = new {
