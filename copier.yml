@@ -4,6 +4,9 @@ _min_copier_version: 9.0.0
 # ====== TEMPLATE ======
 _answers_file: .copier-answers.yml
 _subdirectory: go_template
+# go_template/.claude/skills links to .agents/skills, the layout coding agents
+# share; render it as a link rather than a second copy.
+_preserve_symlinks: true
 _skip_if_exists:
   - .doneram.pkl
   - DESIGN.md
