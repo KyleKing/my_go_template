@@ -1,3 +1,9 @@
+## v0.21.0 (2026-11-21)
+
+### Feat
+
+- adopt doneram v0.21.0 and leave template-owned pins to the template (#3)
+
 ## v0.20.0 (2026-11-13)
 
 ### Feat
