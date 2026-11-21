@@ -1,3 +1,9 @@
+## v0.22.0 (2026-11-21)
+
+### Feat
+
+- ship the doneram agent skills and pin doneram v2.0.0 (#4)
+
 ## v0.21.0 (2026-11-21)
 
 ### Feat
