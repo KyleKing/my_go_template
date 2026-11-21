@@ -154,6 +154,17 @@ Turn every bug found this way into a test named for its trigger
 (`TestQuit_RestoresCursorOnCtrlC`), parametrized over terminal size rather than
 hardcoding one.
 
+## Dependency updates
+
+The weekly Freshness workflow runs doneram and opens draft PRs on `doneram/*` branches.
+Two skills in `.agents/skills` finish what it cannot:
+
+- `doneram-fix-bump` on a `doneram/failing-<tool>` or `doneram/review-<tool>` branch:
+  `doneram explain <tool> --validate` gives the change, where it is pinned, the
+  breaking notes, and the `mise run ci` output; adapt the code until that passes.
+- `copier-update-conflicts` when the updates PR carries a template update: resolve the
+  `.rej` files under the rules below.
+
 ## Template-managed files
 
 This project is generated from
