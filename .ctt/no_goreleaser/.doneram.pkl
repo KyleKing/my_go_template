@@ -10,8 +10,8 @@
 // would only make that update a merge. A version literal discovery cannot
 // see, in a Dockerfile, a script, or a file this project added, goes below.
 
-amends "package://github.com/kyleking/doneram/releases/download/v0.21.0/doneram@0.21.0#/Config.pkl"
-import "package://github.com/kyleking/doneram/releases/download/v0.21.0/doneram@0.21.0#/Config.pkl"
+amends "package://github.com/kyleking/doneram/releases/download/v2.0.0/doneram@2.0.0#/Config.pkl"
+import "package://github.com/kyleking/doneram/releases/download/v2.0.0/doneram@2.0.0#/Config.pkl"
 
 /// Run before a weekly PR opens: a bump that breaks it is bisected out
 /// into its own PR, so the rest still merge.
