@@ -68,9 +68,18 @@ the template keeps commitizen's honest answer and leaves the path change to the
 project.
 
 The migration runs after every update rather than once at the version that
-introduced the key, because each update's `.cz.toml` version hunk is rejected
-(`restore_version` puts the real version back before the diff is applied), and a
-deletion in the same hunk is rejected with it.
+introduced the key, because a conflict elsewhere in `.cz.toml` rejects the whole
+hunk, deletion included.
+
+## The version is restored after an update's diff, not before
+
+copier renders the new template over the project, runs `_tasks`, and only then
+applies the project's own diff. `restore_version` used to run in `_tasks`, so the
+version was already real when the diff's `0.0.0 -> <real>` hunk arrived, and that
+hunk was rejected on every update in every child. `_copier_post_generation.py` now
+skips the restore when `_copier_operation` is `update`, the diff carries the
+version, and the after-stage migration in `copier.yml` reads it back from `HEAD`
+only when a conflict left the placeholder.
 
 ## Test hermeticity is guidance, not a generated `TestMain`
 

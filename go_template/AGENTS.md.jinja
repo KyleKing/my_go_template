@@ -231,8 +231,9 @@ After `copier update --UNSAFE --conflict=rej --defaults`, re-apply real local co
 from each `.rej`, discard hunks the new template supersedes, and delete the files (a
 hook blocks committing them). Three specifics:
 
-- `.cz.toml` is re-rendered with `version = "0.0.0"`. Restore the real version by hand
-  or the next release cuts `v0.0.1`.
+- `.cz.toml` keeps its version: the update's diff carries it, and a post-update
+  migration reads it back from `HEAD` if a conflict left the `0.0.0` placeholder.
+  Check `grep ^version .cz.toml` anyway, since a `0.0.0` cuts `v0.0.1` on the next release.
 - Scaffolding the project then implements (the `cmd/` entry point, the `bindings/` cgo
   shim, its Python wrapper) conflicts on every update, because the template keeps
   rendering its starting version. Re-apply from the `.rej` and move on

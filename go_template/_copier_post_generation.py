@@ -159,9 +159,13 @@ def delete_myself():
     Path(__file__).unlink()
 
 
-def main():
+def main(operation):
     validate_answers()
-    restore_version()
+    # On an update the diff copier applies next carries the real version, and
+    # restoring it first is what got that hunk rejected on every update. The
+    # migration in copier.yml restores it afterwards if a conflict left 0.0.0.
+    if operation != "update":
+        restore_version()
     cleanup_conditional_files()
     cleanup_legacy_files()
     cleanup_removed_files()
@@ -170,4 +174,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1] if len(sys.argv) > 1 else "copy")
