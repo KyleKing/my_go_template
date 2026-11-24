@@ -20,6 +20,23 @@ _tasks:
   - git init
   - python _copier_post_generation.py
 
+# A project past 0.x drops major_version_zero, because commitizen does not refuse
+# the key there: it bumps a breaking change as a minor. This runs after every
+# update's diff is applied rather than once, since the update's .cz.toml hunk can
+# be rejected whole and leave the template's line in place.
+_migrations:
+  - command:
+      - python3
+      - -c
+      - |
+        import pathlib, re
+        cz = pathlib.Path(".cz.toml")
+        text = cz.read_text() if cz.is_file() else ""
+        major = re.search(r'^version = "(\d+)\.', text, re.MULTILINE)
+        if major and int(major.group(1)) >= 1:
+            block = r"^# While the version is 0\.x[^\n]*\n(?:#[^\n]*\n)*major_version_zero = true\n?"
+            cz.write_text(re.sub(block, "", text, flags=re.MULTILINE))
+
 _message_after_copy: |
   The '{{ project_name }}' Go project has been initialized!
 

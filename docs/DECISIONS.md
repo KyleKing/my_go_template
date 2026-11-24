@@ -50,6 +50,28 @@ The generic part is the orphan check, which takes `GOLDEN_TAGS` for goldens behi
 build tag. Projects add their own tasks in a sibling `conf.d` file and override `ci`
 there.
 
+## `major_version_zero` is rendered, and a migration drops it past 0.x
+
+jj-diff and jojo each added `major_version_zero = true` by hand so a `feat!` on 0.x
+cuts a minor rather than 1.0.0, and every `copier update` would have dropped it.
+The right value depends on the project's version, which is not a copier answer,
+and a question for it would default wrong for a 1.x child updated with
+`--defaults`. So `.cz.toml` renders the key, and an every-update migration in
+`copier.yml` deletes it once the version is 1.0.0 or later.
+
+Leaving it in a 1.x project is not refused as expected: commitizen 4.18 and 4.20
+refuse the `--major-version-zero` flag past 0.x but honor the config key silently,
+bumping a breaking change from 1.3.0 to 1.4.0 (verified with `cz bump --dry-run`).
+Without it a 1.x Go module's `feat!` tags v2.0.0, which the module proxy rejects
+until the module path ends in `/v2`. That move is deliberate work either way, so
+the template keeps commitizen's honest answer and leaves the path change to the
+project.
+
+The migration runs after every update rather than once at the version that
+introduced the key, because each update's `.cz.toml` version hunk is rejected
+(`restore_version` puts the real version back before the diff is applied), and a
+deletion in the same hunk is rejected with it.
+
 ## Decisions recorded next to their code
 
 - The two-GOROOT failure from pairing `actions/setup-go` with `jdx/mise-action`
