@@ -29,7 +29,7 @@ jobs:
       - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
 
       # pkl evaluates .doneram.pkl and mise answers the tool resolvers.
-      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+      - uses: jdx/mise-action@924e7c586e33d7d4bae9c14e26c5d22e2beb6e78 # v5.3.0
 
       - uses: kyleking/doneram@065160ffcca308f24122254915a885656293882f # v3.1.0
         with:
@@ -65,7 +65,7 @@ jobs:
       - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
 
       # pkl evaluates .doneram.pkl and mise answers the tool resolvers.
-      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+      - uses: jdx/mise-action@924e7c586e33d7d4bae9c14e26c5d22e2beb6e78 # v5.3.0
 
       - uses: kyleking/doneram@065160ffcca308f24122254915a885656293882f # v3.1.0
         with:
