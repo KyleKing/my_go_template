@@ -13,8 +13,24 @@ _skip_if_exists:
   - README.md
   - .config/mise.toml
   - cmd/{{ project_name }}/main.go
+  - cmd/{{ project_name }}/main_internal_test.go
+  - doc.go
   - demo/stills.tape
   - go.mod
+
+# The stub's test and the library's doc.go are rendered on copy only, so an update
+# never adds them to a project that replaced the stub (a test of a run() that is
+# gone, a root package in a library that has none). Setting _exclude drops
+# copier's defaults, so they are listed again.
+_exclude:
+  - "~*"
+  - "*.py[co]"
+  - __pycache__
+  - .git
+  - .DS_Store
+  - .svn
+  - "{% if _copier_operation == 'update' %}/cmd/*/main_internal_test.go{% endif %}"
+  - "{% if _copier_operation == 'update' %}/doc.go{% endif %}"
 
 _tasks:
   - git init

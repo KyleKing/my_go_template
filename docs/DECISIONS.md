@@ -91,6 +91,20 @@ has no test that starts a process, so a `TestMain` would guard nothing; importin
 aragonite would make it a dependency of every project, including the ones with no
 use for it; and a stdlib copy of `hermetic` would drift from the one the tools use.
 
+## The stub ships its own test, rendered on copy only
+
+A fresh render failed its own `test:coverage-min`: the stub `main.go` had no test, so
+coverage read 0%, and the library render had no package at all, so `mise run ci`
+stopped at "no packages to test". The stub now routes through `run(args, stdout)` and
+`report(err, stderr)`, `main_internal_test.go` covers them (92%), and the library
+render gets a `doc.go`; `test:coverage-min` passes a project with no statements yet.
+
+Both files are scaffolding the project replaces, like `main.go`, but `_skip_if_exists`
+alone is not enough for them: it skips a file only when it exists, so an update would
+add a test of a `run()` jojo and second-look no longer have, and a root package to
+aragonite. `_exclude` drops them when `_copier_operation` is `update`, and
+`_skip_if_exists` keeps `copier recopy` off them.
+
 ## Decisions recorded next to their code
 
 - The two-GOROOT failure from pairing `actions/setup-go` with `jdx/mise-action`

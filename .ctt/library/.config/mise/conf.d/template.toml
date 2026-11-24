@@ -71,6 +71,12 @@ mkdir -p "$dir/unit" "$dir/subprocess" "$dir/merged"
 COVERDIR_SUBPROCESS="$dir/subprocess" go test -count=1 -cover -coverpkg=./... ./... -args -test.gocoverdir="$dir/unit"
 go tool covdata merge -i="$dir/unit,$dir/subprocess" -o="$dir/merged"
 go tool covdata textfmt -i="$dir/merged" -o=coverage.out
+# A project whose packages hold no statements yet (a library's first doc.go) has
+# nothing to measure, and a 0% total would fail it for that.
+if [ "$(grep -vc '^mode:' coverage.out || true)" -eq 0 ]; then
+    echo "No statements to cover yet"
+    exit 0
+fi
 # ^total: rather than total, which also matches every covered function whose
 # name contains it, handing awk two numbers and failing the gate with a syntax
 # error rather than a verdict.

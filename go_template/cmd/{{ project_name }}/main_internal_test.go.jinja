@@ -1,0 +1,71 @@
+{% if project_type == 'cli' -%}
+package main
+
+import (
+	"bytes"
+	"errors"
+	"strings"
+	"testing"
+)
+
+// The stub's own test, so a new project passes its coverage floor from the
+// first commit. Copier renders it on copy only: it belongs to the project from
+// then on, like main.go.
+func TestRun(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name string
+		want string
+		args []string
+	}{
+		{name: "no arguments", want: "Not yet implemented"},
+		{name: "version", args: []string{"--version"}, want: "{{ project_name }} dev (commit: none"},
+		{name: "help", args: []string{"-h"}, want: "Usage:"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			var out bytes.Buffer
+			if err := run(tt.args, &out); err != nil {
+				t.Fatalf("run(%q): %v", tt.args, err)
+			}
+
+			if !strings.Contains(out.String(), tt.want) {
+				t.Errorf("run(%q) wrote %q, want it to contain %q", tt.args, out.String(), tt.want)
+			}
+		})
+	}
+}
+
+// errTest is the error the tests below hand in.
+var errTest = errors.New("boom")
+
+// failingWriter refuses every write.
+type failingWriter struct{}
+
+func (failingWriter) Write([]byte) (int, error) { return 0, errTest }
+
+func TestRun_ReportsAFailedWrite(t *testing.T) {
+	t.Parallel()
+
+	if err := run(nil, failingWriter{}); err == nil {
+		t.Fatal("run into a failing writer returned no error")
+	}
+}
+
+func TestReport(t *testing.T) {
+	t.Parallel()
+
+	var stderr bytes.Buffer
+	if code := report(nil, &stderr); code != 0 || stderr.Len() != 0 {
+		t.Errorf("report(nil) = %d and wrote %q, want 0 and nothing", code, stderr.String())
+	}
+
+	if code := report(errTest, &stderr); code != 1 || stderr.String() != "Error: boom\n" {
+		t.Errorf("report(boom) = %d and wrote %q, want 1 and %q", code, stderr.String(), "Error: boom\n")
+	}
+}
+{%- endif %}

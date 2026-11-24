@@ -39,6 +39,9 @@ Record the decision in `docs/DECISIONS.md` when the answer is "deliberately not"
 
 It is for files the template has nothing further to say about after the first render:
 `README.md`, `DESIGN.md`, `go.mod`, `.config/mise.toml`, and the `cmd/` entry point.
+Scaffolding that an update must not add to a project that replaced it (the stub's
+test, the library's `doc.go`) is also excluded on update; see `_exclude` in
+`copier.yml`.
 
 Adding a file that carries template-maintained content stops every future fix from
 reaching it, silently and permanently. A conflict is loud and usually small to

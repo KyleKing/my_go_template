@@ -59,10 +59,5 @@ jobs:
       - name: Vet and build generated project
         working-directory: ${{ runner.temp }}/generated
         run: |
-          # A library render has no buildable package, only tools/tools.go
-          # behind a build tag, so give vet and build one to check.
-          if [ -z "$(go list ./... 2>/dev/null)" ]; then
-            printf 'package testtemplate\n' > lib.go
-          fi
           go vet ./...
           go build ./...
