@@ -43,7 +43,9 @@ Known false negatives, each of which has already cost a session:
 - **A release is verified by distinct hashes, not asset count.** Ten assets can be one
   binary published ten times. Confirm with
   `gh release download <tag> -p checksums.txt -O - | awk '{print $1}' | sort -u | wc -l`
-  and expect the same number as there are binaries.
+  and expect the same number as there are binaries. `gh release download` resolves
+  the release over GraphQL, so where only REST is reachable fetch the asset by id:
+  `gh api -H 'Accept: application/octet-stream' "repos/{owner}/{repo}/releases/assets/$(gh api repos/{owner}/{repo}/releases/tags/<tag> --jq '.assets[] | select(.name == "checksums.txt") | .id')"`.
 - **`hk check --all` aborts without mise on PATH.** The hk steps shell out to mise's
   tools, so a plain shell (no `mise activate`) dies on `ls-lint: command not found`
   and every later step reads as aborted. Run it as
@@ -109,7 +111,9 @@ Where `github.com/kyleking/aragonite` is already a dependency, its `hermetic` pa
 does this and fails the run when the real home changed anyway:
 `func TestMain(m *testing.M) { hermetic.Main(m, hermetic.App("test-template")) }` in
 each package, plus one test calling `hermetic.RequireEveryPackage` so a new package
-cannot skip it.
+cannot skip it. Point a fixture repository's remote at an address that answers
+nothing (`https://127.0.0.1:1/<owner>/<repo>.git`), so a new network call fails at
+once rather than passing on a laptop with credentials and hanging in CI.
 
 ## Dependency updates
 
