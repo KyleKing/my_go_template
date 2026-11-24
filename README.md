@@ -96,7 +96,9 @@ lands. `gh-star-search` is the worked example (commits `f64b1c1` and `20a2597`):
 - build each remaining platform in its own `bump_version.yml` job, upload it as an
   artifact, and attach it to the release afterwards with `gh release upload`,
   appending its digest to `checksums.txt`
-- drop the targets no runner can build rather than shipping them broken
+- drop the targets no runner can build rather than shipping them broken.
+  `cmd/<name>/crossbuild_test.go` reads `.goreleaser.yml`, so it follows the cut
+  matrix, and skips itself once the build sets `CGO_ENABLED=1`
 
 goreleaser OSS has no `--split`/`continue`, so one goreleaser run cannot span
 runners and the extra platforms have to be attached after the fact.

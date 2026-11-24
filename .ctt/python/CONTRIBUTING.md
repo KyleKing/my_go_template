@@ -106,6 +106,7 @@ Automated by the Bump Version workflow.
    - Run goreleaser to build binaries for Linux, macOS, Windows, and FreeBSD (amd64/arm64) and publish the release
 
    goreleaser runs inside that same workflow because a tag pushed with `GITHUB_TOKEN` does not trigger any other workflow.
+   CI runs on Linux only, so `cmd/test-template/crossbuild_test.go` builds every target `.goreleaser.yml` lists during `go test` (skipped under `-short`, and for a `CGO_ENABLED=1` build) to catch a Unix-only call before the tag is cut.
 
 3. Verify the release by distinct hash, not by asset count. Every target is a separate build, so the checksums must all differ; a repeated hash means one binary was published under several names:
 
