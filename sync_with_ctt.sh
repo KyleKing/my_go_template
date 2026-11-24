@@ -39,8 +39,17 @@ echo "==> Installing tools in $CTT_DIR..."
 echo "==> Running CI checks in $CTT_DIR..."
 (cd "$CTT_DIR" && mise run ci)
 
+# gocritic type-checks .golangci/rules.go, whose dsl import only resolves once
+# go.mod requires it. A render is untidied (go.mod is the project's after the
+# first copy), so tidy for the lint and put the committed render back after.
 echo "==> Running linter in $CTT_DIR..."
-(cd "$CTT_DIR" && mise run lint)
+(
+    cd "$CTT_DIR"
+    cp go.mod go.mod.orig
+    trap 'mv go.mod.orig go.mod; rm -f go.sum coverage.out test-template' EXIT
+    mise exec -- go mod tidy
+    mise run lint
+)
 
 echo ""
 echo "All checks passed!"
