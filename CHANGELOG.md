@@ -1,3 +1,9 @@
+## v0.24.2 (2026-11-24)
+
+### Fix
+
+- **deps**: move jdx/mise-action to v5.3.0 everywhere (#6)
+
 ## v0.24.1 (2026-11-24)
 
 ### Fix
