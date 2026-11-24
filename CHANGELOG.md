@@ -1,3 +1,13 @@
+## v0.24.0 (2026-11-24)
+
+### Feat
+
+- **stub**: ship a tested stub so a fresh render passes its own ladder
+
+### Fix
+
+- **update**: restore the version after the update's diff, not before
+
 ## v0.23.0 (2026-11-24)
 
 ### Feat
