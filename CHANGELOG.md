@@ -1,3 +1,15 @@
+## v0.23.0 (2026-11-24)
+
+### Feat
+
+- **release**: bump a breaking change on 0.x as a minor
+- **release**: build every goreleaser target in the suite
+
+### Fix
+
+- tidy before linting a fresh render
+- **tasks**: fail a template task that needs bash but would run under sh
+
 ## v0.22.0 (2026-11-21)
 
 ### Feat
