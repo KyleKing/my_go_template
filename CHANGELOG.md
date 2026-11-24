@@ -1,3 +1,9 @@
+## v0.24.1 (2026-11-24)
+
+### Fix
+
+- **deps**: update 20 template pins, including hk 2 and doneram 3 (#5)
+
 ## v0.24.0 (2026-11-24)
 
 ### Feat
