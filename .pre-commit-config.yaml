@@ -12,6 +12,16 @@ repos:
     hooks:
       - id: copier-template-tester
 
+  # mise runs a task under `sh`, which is dash on Ubuntu, so a task that needs
+  # bash has to say so. The renders are what children receive.
+  - repo: local
+    hooks:
+      - id: mise-task-shells
+        name: mise tasks that need bash declare it
+        entry: python3 scripts/check_task_shells.py
+        language: system
+        files: ^\.ctt/[^/]+/\.config/mise/conf\.d/.*\.toml$
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:

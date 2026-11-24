@@ -20,6 +20,11 @@ than one file resolves to whichever file loaded last. Name your project file so 
 sorts after `template.toml` (`user.toml` works; `project.toml` does not, since
 `p` < `t`) or a same-named task override will silently do nothing.
 
+mise runs an inline `run` script with `sh -o errexit -c`. `sh` is bash in POSIX mode on
+macOS and dash on Ubuntu, so `set -o pipefail`, `(( ))`, and `[[ ]]` pass on a Mac and
+fail in CI with "Illegal option -o pipefail". A task that uses them sets
+`shell = "bash -c"`.
+
 | Command | Description |
 |---------|-------------|
 | `mise run bench` | Run benchmarks |

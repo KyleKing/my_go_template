@@ -53,6 +53,9 @@ jobs:
             --data publish_python=${{ matrix.publish_python }} \
             . "$RUNNER_TEMP/generated"
 
+      - name: Template tasks that need bash declare it
+        run: python3 scripts/check_task_shells.py "$RUNNER_TEMP"/generated/.config/mise/conf.d/*.toml
+
       - name: Vet and build generated project
         working-directory: ${{ runner.temp }}/generated
         run: |
