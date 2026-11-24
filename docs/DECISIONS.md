@@ -72,6 +72,16 @@ introduced the key, because each update's `.cz.toml` version hunk is rejected
 (`restore_version` puts the real version back before the diff is applied), and a
 deletion in the same hunk is rejected with it.
 
+## Test hermeticity is guidance, not a generated `TestMain`
+
+jj-diff, jojo, and second-look leaked into the runner's `~/.config` from their tests
+(jj 0.47 records every repository it opens under `$XDG_CONFIG_HOME/jj/repos`) and
+fixed it with aragonite's `hermetic` package. The generated `AGENTS.md` carries the
+rule and names the package, and the template renders no `TestMain`. The stub project
+has no test that starts a process, so a `TestMain` would guard nothing; importing
+aragonite would make it a dependency of every project, including the ones with no
+use for it; and a stdlib copy of `hermetic` would drift from the one the tools use.
+
 ## Decisions recorded next to their code
 
 - The two-GOROOT failure from pairing `actions/setup-go` with `jdx/mise-action`

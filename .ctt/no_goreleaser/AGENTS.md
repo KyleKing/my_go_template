@@ -96,6 +96,19 @@ diff, never hand-edit. `hk.pkl` excludes `**/*.golden` from the whitespace fixer
 fixture under any other name (`testdata/golden_*.txt`) will be silently rewritten on
 commit; either rename it or add its glob to that exclude.
 
+A test that runs `git`, `jj`, `gh`, or the built binary inherits the runner's home and
+writes to the real account: jj 0.47 records every repository it opens under
+`$XDG_CONFIG_HOME/jj/repos`, `git config --global` lands in `~/.gitconfig`, and the
+tool's own state goes to the user config directory. Give each test binary a home of
+its own in `TestMain`, before any test runs: point `HOME`, each `XDG_*_HOME`, `TMPDIR`,
+`GIT_CONFIG_GLOBAL` (with `GIT_CONFIG_NOSYSTEM=1`), `JJ_CONFIG`, and `GH_CONFIG_DIR` at
+a temp root, and leave `GOCACHE` and `GOPATH` on the real ones so builds stay warm.
+Where `github.com/kyleking/aragonite` is already a dependency, its `hermetic` package
+does this and fails the run when the real home changed anyway:
+`func TestMain(m *testing.M) { hermetic.Main(m, hermetic.App("test-template")) }` in
+each package, plus one test calling `hermetic.RequireEveryPackage` so a new package
+cannot skip it.
+
 ## TUI testing
 
 A subprocess pipe is not a terminal, so the program detects a non-tty and never renders.
