@@ -1,3 +1,9 @@
+## v0.24.4 (2026-11-25)
+
+### Fix
+
+- **hk**: raise the large-file limit to 1 MB
+
 ## v0.24.3 (2026-11-25)
 
 ### Fix
