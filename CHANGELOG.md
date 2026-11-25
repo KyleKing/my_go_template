@@ -1,3 +1,9 @@
+## v0.24.3 (2026-11-25)
+
+### Fix
+
+- **hk**: check only the large files a change adds or modifies
+
 ## v0.24.2 (2026-11-24)
 
 ### Fix
