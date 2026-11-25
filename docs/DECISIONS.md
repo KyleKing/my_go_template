@@ -105,6 +105,29 @@ add a test of a `run()` jojo and second-look no longer have, and a root package 
 aragonite. `_exclude` drops them when `_copier_operation` is `update`, and
 `_skip_if_exists` keeps `copier recopy` off them.
 
+## `check-added-large-files` checks only what the change adds
+
+hk 2.13 selects every tracked file under `hk check --all`, and its
+`check_added_large_files` builtin sets `allow_binary = true`, so a demo gif
+committed long ago failed every whole-tree check: CI's `hk check --all` and the
+hand-run check jj users rely on. Under hk 1
+the step never saw it: binaries were filtered out, and the name promises files
+*added*.
+
+The step wraps the builtin and drops each file whose content is byte-identical to
+the same path at the base: where HEAD meets `origin/HEAD`, or HEAD when that ref is
+missing. A new or modified oversized file is still refused, by pre-commit (the
+staged files), by pre-push (whatever the unpushed commits add), and by
+`hk check --all` while the commit adding it is unpushed. Verified on a scratch repo
+with a 1.5 MB gif in the base commit: the stock builtin fails `hk check --all`, the
+wrapper passes it, and the wrapper still fails `git commit` of a new 1.5 MB file,
+of a modified one, and `git push` of an unpushed commit adding one.
+
+Removing the step from the `check` and `fix` hooks was the other option, and it
+would leave jj users with no guard at all, since `jj git push` runs no git hooks.
+CI checks out the commit being tested with no `origin/HEAD`, so there the base is
+HEAD and the step checks nothing; the guard is local, as it was under hk 1.
+
 ## Decisions recorded next to their code
 
 - The two-GOROOT failure from pairing `actions/setup-go` with `jdx/mise-action`
